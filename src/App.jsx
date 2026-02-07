@@ -8,7 +8,7 @@ const App = () => {
   const { canvasRef, gameState, pendingState, civCount, broadcast, whisper, listen, reset, advance } = useSimulation(sound);
 
   return (
-    <div className="relative w-full h-screen bg-black overflow-hidden font-sans text-gray-200">
+    <div className="fixed inset-0 bg-black overflow-hidden font-sans text-gray-200">
       <canvas ref={canvasRef} className="absolute top-0 left-0 z-0" />
 
       <div className="relative z-10 w-full h-full pointer-events-none">

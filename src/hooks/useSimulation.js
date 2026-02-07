@@ -8,7 +8,8 @@ const STAR_DENSITY = 8000;
 
 export const useSimulation = (sound) => {
   const canvasRef = useRef(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const dimensionsRef = useRef({ width: 0, height: 0 });
+  const [initKey, setInitKey] = useState(0);
   const [civCount, setCivCount] = useState(0);
 
   const [gameState, _setGameState] = useState('START');
@@ -46,23 +47,43 @@ export const useSimulation = (sound) => {
   const soundRef = useRef(sound);
   useEffect(() => { soundRef.current = sound; }, [sound]);
 
-  // Resize
+  // Resize — update canvas size directly, do NOT re-init the simulation
   useEffect(() => {
     const handleResize = () => {
-      setDimensions({ width: window.innerWidth, height: window.innerHeight });
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const prev = dimensionsRef.current;
+
+      // Skip small height-only changes (mobile address bar toggle)
+      if (prev.width === w && prev.height > 0 && Math.abs(prev.height - h) < 150) {
+        return;
+      }
+
+      dimensionsRef.current = { width: w, height: h };
+      const canvas = canvasRef.current;
+      if (canvas) {
+        canvas.width = w;
+        canvas.height = h;
+        // Full opaque clear to prevent flash after canvas reset
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.fillStyle = 'rgb(5, 5, 10)';
+          ctx.fillRect(0, 0, w, h);
+        }
+      }
     };
     window.addEventListener('resize', handleResize);
     handleResize();
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Main simulation init + loop
+  // Main simulation init + loop — runs once on mount or on explicit reset (initKey)
   useEffect(() => {
-    if (dimensions.width === 0 || !canvasRef.current) return;
+    const { width, height } = dimensionsRef.current;
+    if (width === 0 || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    const { width, height } = dimensions;
 
     canvas.width = width;
     canvas.height = height;
@@ -230,9 +251,10 @@ export const useSimulation = (sound) => {
         sim.shake.intensity = 0;
       }
 
-      // Clear with trail effect
+      // Clear with trail effect (use current dimensions for proper coverage after resize)
+      const { width: curW, height: curH } = dimensionsRef.current;
       ctx.fillStyle = 'rgba(5, 5, 10, 0.4)';
-      ctx.fillRect(-10, -10, width + 20, height + 20);
+      ctx.fillRect(-10, -10, curW + 20, curH + 20);
 
       // 0. Nebulae
       sim.nebulae.forEach(n => {
@@ -416,7 +438,7 @@ export const useSimulation = (sound) => {
       timeoutsRef.current.forEach(t => clearTimeout(t));
       timeoutsRef.current = [];
     };
-  }, [dimensions, setGameState, transitionState]);
+  }, [initKey, setGameState, transitionState]);
 
   // --- Shared cleanup ---
   const clearEffects = useCallback(() => {
@@ -525,7 +547,7 @@ export const useSimulation = (sound) => {
     clearEffects();
     soundRef.current?.stopDrone?.();
     setGameState('START');
-    setDimensions(d => ({ ...d }));
+    setInitKey(k => k + 1);
   }, [setGameState, clearEffects]);
 
   return { canvasRef, gameState, pendingState, civCount, broadcast, whisper, listen, reset, advance };
