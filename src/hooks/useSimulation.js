@@ -11,21 +11,35 @@ export const useSimulation = (sound) => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [civCount, setCivCount] = useState(0);
 
-  // Wrapped state with ref mirror to avoid stale closures in rAF loop
   const [gameState, _setGameState] = useState('START');
   const gameStateRef = useRef('START');
   const setGameState = useCallback((val) => {
-    if (typeof val === 'function') {
-      _setGameState(prev => {
-        const next = val(prev);
-        gameStateRef.current = next;
-        return next;
-      });
-    } else {
-      gameStateRef.current = val;
-      _setGameState(val);
-    }
+    gameStateRef.current = val;
+    _setGameState(val);
   }, []);
+
+  // Pending transition — simulation freezes until user clicks "Continue"
+  const [pendingState, _setPendingState] = useState(null);
+  const pendingStateRef = useRef(null);
+  const setPendingState = useCallback((val) => {
+    pendingStateRef.current = val;
+    _setPendingState(val);
+  }, []);
+
+  // Queue an automatic transition (freeze + wait for user)
+  const transitionState = useCallback((newState) => {
+    if (pendingStateRef.current != null) return; // already queued
+    if (gameStateRef.current === newState) return;
+    setPendingState(newState);
+  }, [setPendingState]);
+
+  // User clicks "Continue" → apply pending state, unfreeze
+  const advance = useCallback(() => {
+    const next = pendingStateRef.current;
+    if (!next) return;
+    setPendingState(null);
+    setGameState(next);
+  }, [setGameState, setPendingState]);
 
   const simRef = useRef(null);
   const timeoutsRef = useRef([]);
@@ -75,10 +89,10 @@ export const useSimulation = (sound) => {
 
     // --- Generate nebulae ---
     const nebulaColors = [
-      '59, 130, 246',  // blue
-      '139, 92, 246',  // violet
-      '20, 184, 166',  // teal
-      '168, 85, 247',  // purple
+      '59, 130, 246',
+      '139, 92, 246',
+      '20, 184, 166',
+      '168, 85, 247',
     ];
     const nebulae = [];
     for (let i = 0; i < 4; i++) {
@@ -130,11 +144,10 @@ export const useSimulation = (sound) => {
       }
     };
 
-    // --- Helper: destroy user ---
+    // --- Helper: destroy user (visuals immediate, state gated) ---
     const destroyUser = () => {
       if (!sim.userStar || !sim.userStar.alive) return;
       sim.shake.intensity = 25;
-      // Mixed blue + orange particles
       for (let i = 0; i < 60; i++) {
         const angle = Math.random() * Math.PI * 2;
         const speed = 2 + Math.random() * 8;
@@ -147,9 +160,9 @@ export const useSimulation = (sound) => {
         });
       }
       sim.userStar.alive = false;
-      setGameState('DESTROYED');
       setCivCount(c => c - 1);
       soundRef.current?.playExplosion?.();
+      transitionState('DESTROYED');
     };
 
     // --- Helper: destroy NPC ---
@@ -161,8 +174,8 @@ export const useSimulation = (sound) => {
       const star = sim.stars.find(s => s.x === sim.npcBroadcaster.x && s.y === sim.npcBroadcaster.y);
       if (star) star.alive = false;
       setCivCount(c => c - 1);
-      setGameState('WITNESS');
       soundRef.current?.playExplosion?.();
+      transitionState('WITNESS');
     };
 
     // --- Helper: trigger a hunter ---
@@ -171,10 +184,7 @@ export const useSimulation = (sound) => {
       const isNpcTarget = target !== sim.userStar;
 
       if (!isNpcTarget) {
-        setGameState(prev => {
-          if (prev !== 'DETECTED' && prev !== 'DESTROYED') return 'DETECTED';
-          return prev;
-        });
+        transitionState('DETECTED');
         soundRef.current?.playDetection?.();
       }
 
@@ -205,10 +215,11 @@ export const useSimulation = (sound) => {
     const loop = () => {
       if (!ctx) return;
       const currentState = gameStateRef.current;
+      const isPaused = pendingStateRef.current != null;
 
       ctx.save();
 
-      // Camera shake
+      // Camera shake (always runs)
       if (sim.shake.intensity > 0.5) {
         ctx.translate(
           (Math.random() - 0.5) * sim.shake.intensity,
@@ -234,7 +245,7 @@ export const useSimulation = (sound) => {
         ctx.fill();
       });
 
-      // 1. Background stars
+      // 1. Background stars (always twinkle)
       sim.stars.forEach(star => {
         star.alpha += star.alphaChange;
         if (star.alpha <= 0.1 || star.alpha >= 1) star.alphaChange *= -1;
@@ -291,16 +302,19 @@ export const useSimulation = (sound) => {
         }
       }
 
-      // 4. Waves
+      // 4. Waves — freeze propagation + collisions when paused
       for (let i = sim.waves.length - 1; i >= 0; i--) {
         const wave = sim.waves[i];
-        wave.radius += LIGHT_SPEED;
-        wave.alpha -= 0.002;
 
-        if (wave.maxRadius && wave.radius > wave.maxRadius) {
-          wave.alpha -= 0.02;
+        if (!isPaused) {
+          wave.radius += LIGHT_SPEED;
+          wave.alpha -= 0.002;
+          if (wave.maxRadius && wave.radius > wave.maxRadius) {
+            wave.alpha -= 0.02;
+          }
         }
 
+        // Always draw
         if (wave.alpha > 0) {
           ctx.beginPath();
           ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
@@ -309,8 +323,8 @@ export const useSimulation = (sound) => {
           ctx.stroke();
         }
 
-        // Collision detection with hunters
-        if (!wave.maxRadius || wave.radius <= wave.maxRadius) {
+        // Collision detection only when not paused
+        if (!isPaused && (!wave.maxRadius || wave.radius <= wave.maxRadius)) {
           sim.stars.forEach(star => {
             if (!star.isHunter || star.hasFired) return;
             const dx = star.x - wave.x;
@@ -324,21 +338,26 @@ export const useSimulation = (sound) => {
           });
         }
 
-        if (wave.alpha <= 0) sim.waves.splice(i, 1);
+        if (!isPaused && wave.alpha <= 0) sim.waves.splice(i, 1);
       }
 
-      // 5. Attacks (photoids) with trail
+      // 5. Attacks — freeze progression when paused
       for (let i = sim.attacks.length - 1; i >= 0; i--) {
         const atk = sim.attacks[i];
-        atk.progress += ATTACK_SPEED;
+
+        if (!isPaused) {
+          atk.progress += ATTACK_SPEED;
+        }
 
         const cx = atk.startX + (atk.targetX - atk.startX) * atk.progress;
         const cy = atk.startY + (atk.targetY - atk.startY) * atk.progress;
 
-        atk.trail.push({ x: cx, y: cy });
-        if (atk.trail.length > 20) atk.trail.shift();
+        if (!isPaused) {
+          atk.trail.push({ x: cx, y: cy });
+          if (atk.trail.length > 20) atk.trail.shift();
+        }
 
-        // Draw fading trail
+        // Always draw trail
         for (let t = 0; t < atk.trail.length - 1; t++) {
           const trailAlpha = (t / atk.trail.length) * 0.6;
           const trailWidth = (t / atk.trail.length) * 3;
@@ -359,8 +378,8 @@ export const useSimulation = (sound) => {
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // Impact
-        if (atk.progress >= 1) {
+        // Impact only when not paused
+        if (!isPaused && atk.progress >= 1) {
           if (atk.isNpcTarget) {
             destroyNpc();
           } else {
@@ -370,7 +389,7 @@ export const useSimulation = (sound) => {
         }
       }
 
-      // 6. Particles
+      // 6. Particles (always animate — decorative)
       for (let i = sim.particles.length - 1; i >= 0; i--) {
         const p = sim.particles[i];
         p.x += p.vx;
@@ -397,9 +416,9 @@ export const useSimulation = (sound) => {
       timeoutsRef.current.forEach(t => clearTimeout(t));
       timeoutsRef.current = [];
     };
-  }, [dimensions, setGameState]);
+  }, [dimensions, setGameState, transitionState]);
 
-  // --- Shared cleanup for transitioning between actions ---
+  // --- Shared cleanup ---
   const clearEffects = useCallback(() => {
     const sim = simRef.current;
     if (!sim) return;
@@ -409,9 +428,10 @@ export const useSimulation = (sound) => {
     sim.stars.forEach(s => { s.hasFired = false; });
     timeoutsRef.current.forEach(t => clearTimeout(t));
     timeoutsRef.current = [];
-  }, []);
+    setPendingState(null);
+  }, [setPendingState]);
 
-  // --- Exposed actions ---
+  // --- User actions (instant, no gate) ---
 
   const broadcast = useCallback(() => {
     const state = gameStateRef.current;
@@ -451,7 +471,6 @@ export const useSimulation = (sound) => {
       isWhisper: true,
     });
 
-    // Check if any hunters within whisper range
     const hasHunterInRange = sim.stars.some(s => {
       if (!s.isHunter) return false;
       const dx = s.x - sim.userStar.x;
@@ -462,12 +481,12 @@ export const useSimulation = (sound) => {
     if (!hasHunterInRange) {
       const t = setTimeout(() => {
         if (gameStateRef.current === 'WHISPERING') {
-          setGameState('SAFE');
+          transitionState('SAFE');
         }
-      }, 2500);
+      }, 5000);
       timeoutsRef.current.push(t);
     }
-  }, [setGameState, clearEffects]);
+  }, [setGameState, clearEffects, transitionState]);
 
   const listen = useCallback(() => {
     const state = gameStateRef.current;
@@ -478,7 +497,6 @@ export const useSimulation = (sound) => {
     clearEffects();
     setGameState('LISTENING');
 
-    // After a delay, a random NPC civilization broadcasts
     const delay = 3000 + Math.random() * 5000;
     const t = setTimeout(() => {
       if (gameStateRef.current !== 'LISTENING') return;
@@ -510,5 +528,5 @@ export const useSimulation = (sound) => {
     setDimensions(d => ({ ...d }));
   }, [setGameState, clearEffects]);
 
-  return { canvasRef, gameState, civCount, broadcast, whisper, listen, reset };
+  return { canvasRef, gameState, pendingState, civCount, broadcast, whisper, listen, reset, advance };
 };

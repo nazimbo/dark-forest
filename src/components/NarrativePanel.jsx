@@ -1,36 +1,48 @@
-import { Info } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import { NARRATIVES } from '../narratives';
 
-const NarrativePanel = ({ gameState, civCount, children }) => {
+const NarrativePanel = ({ gameState, children }) => {
   const narrative = NARRATIVES[gameState] || NARRATIVES.START;
+  const [isFading, setIsFading] = useState(false);
+  const prevGameStateRef = useRef(gameState);
+
+  useEffect(() => {
+    if (gameState === prevGameStateRef.current) return;
+    prevGameStateRef.current = gameState;
+    setIsFading(true);
+    const t = setTimeout(() => setIsFading(false), 300);
+    return () => clearTimeout(t);
+  }, [gameState]);
 
   return (
-    <div className="max-w-md space-y-4 sm:space-y-6 pointer-events-auto bg-black/60 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl border border-gray-800 shadow-2xl transition-all duration-500">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3 text-blue-400">
-          <Info size={20} />
-          <span className="uppercase text-xs tracking-widest font-semibold">Cosmic Axiom</span>
+    <div className="absolute inset-x-0 bottom-0 pointer-events-none">
+      <div className="bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-24 pb-6 px-6 sm:px-10 md:px-16">
+
+        <div className={`text-center mb-3 transition-all duration-300 ${isFading ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
+          <span className="text-blue-400/80 text-xs sm:text-sm uppercase tracking-[0.25em] font-medium">
+            {narrative.title}
+          </span>
         </div>
-        <div className="text-xs text-gray-600 font-mono tabular-nums">
-          {civCount} civilizations
-        </div>
-      </div>
 
-      <h2 className="text-xl sm:text-2xl md:text-3xl font-light text-white leading-tight transition-all">
-        {narrative.title}
-      </h2>
+        <p
+          className={`text-center text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed transition-opacity duration-300 ${isFading ? 'opacity-0' : 'opacity-100'}`}
+          style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}
+        >
+          {narrative.text}
+        </p>
 
-      <p className="text-base sm:text-lg text-gray-300 leading-relaxed transition-all">
-        {narrative.text}
-      </p>
-
-      <div className="border-t border-gray-700 pt-4">
-        <p className="text-sm text-gray-500 italic">
+        <p className={`text-center text-xs sm:text-sm text-gray-500 italic max-w-xl mx-auto mt-2 transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`}>
           {narrative.subtext}
         </p>
-      </div>
 
-      {children}
+        <div className="flex justify-center mt-5 pointer-events-auto">
+          {children}
+        </div>
+
+        <div className="text-center mt-4 text-xs text-gray-700">
+          "The universe is a dark forest." &mdash; Liu Cixin
+        </div>
+      </div>
     </div>
   );
 };
