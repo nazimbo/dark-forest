@@ -5,7 +5,7 @@ const NarrativePanel = ({ gameState, civCount, children }) => {
   const narrative = NARRATIVES[gameState] || NARRATIVES.START;
 
   return (
-    <div className="max-w-md space-y-6 pointer-events-auto bg-black/60 backdrop-blur-sm p-8 rounded-xl border border-gray-800 shadow-2xl transition-all duration-500">
+    <div className="max-w-md space-y-4 sm:space-y-6 pointer-events-auto bg-black/60 backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-xl border border-gray-800 shadow-2xl transition-all duration-500">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 text-blue-400">
           <Info size={20} />
@@ -16,11 +16,11 @@ const NarrativePanel = ({ gameState, civCount, children }) => {
         </div>
       </div>
 
-      <h2 className="text-3xl font-light text-white leading-tight transition-all">
+      <h2 className="text-xl sm:text-2xl md:text-3xl font-light text-white leading-tight transition-all">
         {narrative.title}
       </h2>
 
-      <p className="text-lg text-gray-300 leading-relaxed transition-all">
+      <p className="text-base sm:text-lg text-gray-300 leading-relaxed transition-all">
         {narrative.text}
       </p>
 
