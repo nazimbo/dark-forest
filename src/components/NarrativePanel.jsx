@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import { NARRATIVES } from '../narratives';
+import { getNarratives } from '../narratives';
+import { useTranslation } from '../i18n/LanguageContext';
 
 const NarrativePanel = ({ gameState, children }) => {
-  const narrative = NARRATIVES[gameState] || NARRATIVES.START;
+  const { t, lang } = useTranslation();
+  const narratives = getNarratives(lang);
+  const narrative = narratives[gameState] || narratives.START;
   const [isFading, setIsFading] = useState(false);
   const prevGameStateRef = useRef(gameState);
 
@@ -10,8 +13,8 @@ const NarrativePanel = ({ gameState, children }) => {
     if (gameState === prevGameStateRef.current) return;
     prevGameStateRef.current = gameState;
     setIsFading(true);
-    const t = setTimeout(() => setIsFading(false), 300);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setIsFading(false), 300);
+    return () => clearTimeout(timer);
   }, [gameState]);
 
   return (
@@ -40,7 +43,7 @@ const NarrativePanel = ({ gameState, children }) => {
         </div>
 
         <div className="text-center mt-4 text-xs text-gray-700">
-          "The universe is a dark forest." &mdash; Liu Cixin
+          {t('quote')}
         </div>
       </div>
     </div>

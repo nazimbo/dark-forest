@@ -1,6 +1,8 @@
 import { Radio, Volume2, Eye, RefreshCw, ArrowRight } from 'lucide-react';
+import { useTranslation } from '../i18n/LanguageContext';
 
 const GameControls = ({ gameState, pendingState, onBroadcast, onWhisper, onListen, onReset, onAdvance }) => {
+  const { t } = useTranslation();
   const showChoices = ['START', 'WITNESS', 'SAFE'].includes(gameState);
 
   // Pending transition → show Continue button
@@ -11,7 +13,7 @@ const GameControls = ({ gameState, pendingState, onBroadcast, onWhisper, onListe
           onClick={onAdvance}
           className="group flex items-center gap-2 sm:gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 text-gray-200 rounded-lg transition-all border border-white/20 hover:border-white/40"
         >
-          <span>Continue</span>
+          <span>{t('ui.continue')}</span>
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
@@ -27,7 +29,7 @@ const GameControls = ({ gameState, pendingState, onBroadcast, onWhisper, onListe
             className="group flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(37,99,235,0.3)]"
           >
             <Radio className="w-5 h-5 group-hover:animate-ping" />
-            <span>{gameState === 'WITNESS' ? 'Broadcast Anyway' : 'Broadcast Signal'}</span>
+            <span>{gameState === 'WITNESS' ? t('ui.broadcastAnyway') : t('ui.broadcastSignal')}</span>
           </button>
 
           <button
@@ -35,7 +37,7 @@ const GameControls = ({ gameState, pendingState, onBroadcast, onWhisper, onListe
             className="group flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3 bg-indigo-900/60 hover:bg-indigo-800/80 text-indigo-200 rounded-lg transition-all border border-indigo-700/50 hover:border-indigo-500/70"
           >
             <Volume2 className="w-5 h-5 opacity-50 group-hover:opacity-100" />
-            <span>Whisper</span>
+            <span>{t('ui.whisper')}</span>
           </button>
 
           <button
@@ -43,7 +45,7 @@ const GameControls = ({ gameState, pendingState, onBroadcast, onWhisper, onListe
             className="group flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3 bg-gray-900/60 hover:bg-gray-800/80 text-gray-300 rounded-lg transition-all border border-gray-700/50 hover:border-gray-500/70"
           >
             <Eye className="w-5 h-5 opacity-50 group-hover:opacity-100" />
-            <span>{gameState === 'WITNESS' ? 'Keep Listening' : 'Listen'}</span>
+            <span>{gameState === 'WITNESS' ? t('ui.keepListening') : t('ui.listen')}</span>
           </button>
         </>
       )}
@@ -51,21 +53,21 @@ const GameControls = ({ gameState, pendingState, onBroadcast, onWhisper, onListe
       {gameState === 'BROADCASTING' && (
         <div className="flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3 border border-blue-500/30 bg-blue-900/20 text-blue-300 rounded-lg animate-pulse">
           <Radio className="w-5 h-5 animate-spin" />
-          <span>Transmitting Location...</span>
+          <span>{t('ui.transmitting')}</span>
         </div>
       )}
 
       {gameState === 'WHISPERING' && (
         <div className="flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3 border border-indigo-500/30 bg-indigo-900/20 text-indigo-300 rounded-lg animate-pulse">
           <Volume2 className="w-5 h-5" />
-          <span>Whispering...</span>
+          <span>{t('ui.whispering')}</span>
         </div>
       )}
 
       {gameState === 'LISTENING' && (
         <div className="flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3 border border-gray-500/30 bg-gray-900/20 text-gray-400 rounded-lg">
           <Eye className="w-5 h-5 animate-pulse" />
-          <span>Observing the void...</span>
+          <span>{t('ui.observing')}</span>
         </div>
       )}
 
@@ -75,7 +77,7 @@ const GameControls = ({ gameState, pendingState, onBroadcast, onWhisper, onListe
           className="flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3 border border-gray-600 hover:border-gray-400 hover:bg-gray-800 text-gray-300 rounded-lg transition-all"
         >
           <RefreshCw className="w-5 h-5" />
-          <span>Rebirth Civilization</span>
+          <span>{t('ui.rebirth')}</span>
         </button>
       )}
     </div>
