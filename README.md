@@ -138,13 +138,20 @@ dark-forest/
 │   ├── main.jsx                    # React entry point, wraps App in LanguageProvider
 │   ├── App.jsx                     # Root component — canvas + header + narrative panel
 │   ├── index.css                   # Tailwind CSS imports + global styles
-│   ├── narratives.js               # Helper to fetch localized narrative text
 │   ├── components/
 │   │   ├── GameControls.jsx        # Action buttons (broadcast/whisper/listen/reset/continue)
+│   │   ├── LanguageSwitcher.jsx    # EN/FR language toggle
 │   │   └── NarrativePanel.jsx      # Bottom panel showing story text + controls
 │   ├── hooks/
-│   │   ├── useSimulation.js        # Core simulation: stars, waves, attacks, game state machine
+│   │   ├── useGameState.js         # Game state machine (states, transitions, refs)
+│   │   ├── useSimulation.js        # Orchestrator — canvas, animation loop, user actions
 │   │   └── useSound.js             # Web Audio API procedural sound effects
+│   ├── simulation/
+│   │   ├── constants.js            # Game constants (states, speeds, ratios)
+│   │   ├── entities.js             # Factory functions (stars, waves, attacks, particles)
+│   │   ├── physics.js              # Frame updates (waves, attacks, particles, shake)
+│   │   ├── renderer.js             # Canvas rendering pipeline
+│   │   └── rules.js                # Game rules (collisions, impacts, user actions)
 │   └── i18n/
 │       ├── LanguageContext.jsx      # React context + hooks for language switching
 │       └── translations.js         # EN/FR translation strings and narrative content
@@ -158,13 +165,35 @@ dark-forest/
 
 ## How It Works
 
+### Simulation Architecture
+
+The simulation is split into pure modules (`simulation/`) and React glue (`hooks/`):
+
+- **`simulation/constants`** — Tuning knobs (speeds, ratios, state enum)
+- **`simulation/entities`** — Factory functions that create stars, waves, attacks, and particles
+- **`simulation/physics`** — Frame-by-frame updates (wave expansion, attack progress, particle decay, scheduled events)
+- **`simulation/rules`** — Game rules mapping physics events to consequences (collisions → attacks, impacts → explosions, user actions → state transitions)
+- **`simulation/renderer`** — Draws the full scene to canvas each frame
+- **`hooks/useGameState`** — State machine managing game states, transitions, and pending-state pausing
+- **`hooks/useSimulation`** — Orchestrator wiring the animation loop, canvas resize, and user action callbacks
+- **`hooks/useSound`** — Web Audio API procedural sound synthesis
+
+### Game Loop (per frame)
+
+1. **Decorative updates** always run — particles, flashes, screen shake decay
+2. **Scheduled events** fire when their frame counters reach zero (hunter attacks, NPC broadcasts, whisper safety checks)
+3. **Wave expansion** — broadcast/whisper waves grow outward; collisions with hunter stars are detected
+4. **Attack progress** — photoid strikes advance along their trajectories toward targets
+5. **Rendering** — canvas is drawn with a semi-transparent overlay creating a trail/glow effect
+
+### Gameplay
+
 1. **Starfield generation** — On mount, stars are procedurally placed based on screen density (~1 per 8000px²). Each star has a 20% chance of being a hidden hunter.
 2. **Player choice** — The player can broadcast (full-range signal), whisper (limited-range signal), or listen (passive observation).
 3. **Broadcast / Whisper** — Emits an expanding circular wave from the player's star. Whisper waves fade out at 200px radius.
 4. **Detection** — When a wave's radius intersects a hunter star (within 5px tolerance), that hunter fires a photoid attack toward the signal's origin.
 5. **Listening** — After a random delay, an NPC civilization broadcasts. Hunters detect it and destroy it, demonstrating the dark forest in action.
 6. **Destruction** — When a photoid reaches its target, an explosion of particles is triggered, the star is removed, and all hunters are revealed.
-7. **Rendering** — A `requestAnimationFrame` loop draws everything on a canvas with a semi-transparent overlay creating a trail/glow effect.
 
 ## Development
 
