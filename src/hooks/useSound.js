@@ -1,5 +1,15 @@
 import { useRef, useCallback, useEffect } from 'react';
 
+// All sounds are synthesized at runtime via the Web Audio API — no audio files needed.
+// Sound design overview:
+//   startDrone    — Two sine oscillators slightly detuned (48Hz vs 48.7Hz) create a
+//                   slow ~0.7Hz beat frequency, producing an eerie low rumble.
+//   playBroadcast — Rising-then-falling sine sweep (220→880→440Hz) over 2.5s.
+//   playWhisper   — Gentle short sine sweep (300→500Hz), quieter and briefer.
+//   playDetection — Descending sawtooth (150→80Hz), harsh and alarming.
+//   playExplosion — Two layers: a noise burst through a sweeping lowpass filter for
+//                   the "crackle", plus a sub-bass sine thud (60→20Hz) for impact.
+
 export const useSound = () => {
   const ctxRef = useRef(null);
   const droneRef = useRef(null);

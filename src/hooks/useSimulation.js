@@ -1,17 +1,42 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 
-const LIGHT_SPEED = 3;
-const WHISPER_MAX_RADIUS = 200;
-const ATTACK_SPEED = 0.04;
-const HUNTER_RATIO = 0.2;
-const STAR_DENSITY = 8000;
+// ── Simulation constants ──────────────────────────────────────────────
+const LIGHT_SPEED = 3;            // Wave expansion speed (pixels per frame)
+const WHISPER_MAX_RADIUS = 200;   // Max reach of a whisper signal (pixels)
+const ATTACK_SPEED = 0.04;        // Photoid progress per frame (0→1 range, ~25 frames to impact)
+const HUNTER_RATIO = 0.2;         // Probability that a generated star is a hidden hunter
+const STAR_DENSITY = 8000;        // Area per star (pixels²) — lower = more stars
+
+// ── State machine ─────────────────────────────────────────────────────
+//
+// States: START, BROADCASTING, WHISPERING, LISTENING, DETECTED, DESTROYED, WITNESS, SAFE
+//
+// Transitions:
+//   START / WITNESS / SAFE  →  BROADCASTING   (user clicks "Broadcast")
+//   START / WITNESS / SAFE  →  WHISPERING     (user clicks "Whisper")
+//   START / WITNESS / SAFE  →  LISTENING      (user clicks "Listen")
+//   BROADCASTING            →  DETECTED       (wave reaches a hunter)
+//   WHISPERING              →  DETECTED       (wave reaches a nearby hunter)
+//   WHISPERING              →  SAFE           (whisper fades with no hunters in range)
+//   LISTENING               →  WITNESS        (NPC broadcasts and gets destroyed)
+//   DETECTED                →  DESTROYED      (photoid reaches user star)
+//   DESTROYED               →  START          (user clicks "Reset")
+//
+// Gated transitions: DETECTED, DESTROYED, WITNESS, and SAFE are "pending"
+// transitions — the simulation freezes and waits for the user to click
+// "Continue" before applying the state change. This lets the player read
+// the narrative text before the story advances.
+//
 
 export const useSimulation = (sound) => {
   const canvasRef = useRef(null);
   const dimensionsRef = useRef({ width: 0, height: 0 });
-  const [initKey, setInitKey] = useState(0);
+  const [initKey, setInitKey] = useState(0);  // Incrementing this re-runs the simulation init effect
   const [civCount, setCivCount] = useState(0);
 
+  // We mirror gameState and pendingState into refs so the requestAnimationFrame
+  // loop can read the current value without re-creating the loop closure.
+  // React state alone would be stale inside rAF callbacks.
   const [gameState, _setGameState] = useState('START');
   const gameStateRef = useRef('START');
   const setGameState = useCallback((val) => {

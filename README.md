@@ -9,18 +9,22 @@ An interactive visualization of Liu Cixin's **Dark Forest Theory** from *The Thr
 
 ## Overview
 
-The universe is a dark forest. Every civilization is an armed hunter, stalking silently among the stars. This simulator lets you play as a nascent civilization faced with a single, irreversible choice: **broadcast your existence, or remain silent**.
+The universe is a dark forest. Every civilization is an armed hunter, stalking silently among the stars. This simulator lets you play as a nascent civilization faced with three choices: **broadcast your existence**, **whisper cautiously**, or **listen in silence**.
 
 Press the button. Watch the signal ripple outward at the speed of light. And discover what happens when the hunters hear you.
 
 ## Features
 
 - **Real-time Canvas simulation** — Stars, broadcast waves, photoid strikes, and explosions rendered at 60fps
-- **4-stage narrative** — The story evolves as the simulation progresses, grounded in Dark Forest axioms
+- **8-stage narrative** — The story evolves through multiple branching paths grounded in Dark Forest axioms
+- **Three player choices** — Broadcast (full signal), Whisper (limited range), or Listen (observe silently)
 - **Procedural starfield** — Dynamically generated stars with twinkling animations, density scaling with screen size
 - **Hidden hunter civilizations** — 20% of stars are hunters, invisible until the final moment
+- **NPC civilizations** — Watch other civilizations broadcast and face the consequences
 - **Photoid attacks** — Red laser-like strikes from detected hunters toward your coordinates
 - **Particle explosion system** — Destruction visualized with physics-based particle effects
+- **Procedural sound design** — Web Audio API synthesis for broadcasts, whispers, detections, and explosions
+- **Multilingual support** — English and French with persistent language preference
 - **Responsive design** — Adapts to any screen size
 - **Glassmorphism UI** — Semi-transparent narrative panel with backdrop blur
 
@@ -37,10 +41,51 @@ From these axioms, combined with the **chain of suspicion** (no civilization can
 
 | State | Description |
 |---|---|
-| `START` | Your civilization exists in silent anonymity. You can choose to broadcast. |
-| `BROADCASTING` | Your signal expands outward. The wave will eventually reach a hunter. |
+| `START` | Your civilization exists in silent anonymity. You can broadcast, whisper, or listen. |
+| `BROADCASTING` | Your full-power signal expands outward. The wave will eventually reach a hunter. |
+| `WHISPERING` | A limited-range signal. If no hunters are within range, you survive. |
+| `LISTENING` | You observe the void in silence. Eventually an NPC civilization will broadcast. |
+| `WITNESS` | You watched another civilization get destroyed by hunters. You may now act. |
+| `SAFE` | Your whisper faded without reaching any hunters. You survived — this time. |
 | `DETECTED` | A hunter has received your signal and launched a photoid strike. |
 | `DESTROYED` | Your civilization is gone. All hidden hunters are revealed in red. |
+
+### State Transitions
+
+```
+                    ┌─────────────────────────────────┐
+                    │                                 │
+                    ▼                                 │
+               ┌─────────┐                            │
+        ┌──────│  START   │──────────┐                 │
+        │      └─────────┘          │                 │
+        │           │               │                 │
+   broadcast     whisper         listen               │
+        │           │               │                 │
+        ▼           ▼               ▼                 │
+ ┌──────────┐ ┌──────────┐  ┌──────────┐             │
+ │BROADCAST-│ │WHISPERING│  │LISTENING │             │
+ │   ING    │ │          │  │          │             │
+ └────┬─────┘ └──┬───┬───┘  └────┬─────┘             │
+      │          │   │            │                   │
+  detected   detected  no     NPC broadcast           │
+      │          │   hunters   + destroyed            │
+      │          │   nearby       │                   │
+      ▼          ▼    ▼           ▼                   │
+ ┌─────────┐  ┌─────────┐  ┌─────────┐              │
+ │DETECTED │  │  SAFE   │  │ WITNESS │              │
+ └────┬────┘  └────┬────┘  └────┬────┘              │
+      │            │            │                    │
+   photoid     broadcast/   broadcast/               │
+   arrives     whisper/     whisper/                  │
+      │        listen       listen                   │
+      ▼            │            │                    │
+ ┌─────────┐       └────────────┘                    │
+ │DESTROYED│                                         │
+ └────┬────┘                                         │
+      │              reset                           │
+      └──────────────────────────────────────────────┘
+```
 
 ## Tech Stack
 
@@ -51,6 +96,7 @@ From these axioms, combined with the **chain of suspicion** (no civilization can
 | [Tailwind CSS 4](https://tailwindcss.com) | Utility-first styling |
 | [Lucide React](https://lucide.dev) | Icon library |
 | HTML5 Canvas API | Real-time simulation rendering |
+| Web Audio API | Procedural sound synthesis |
 
 ## Getting Started
 
@@ -89,11 +135,19 @@ dark-forest/
 ├── public/
 │   └── vite.svg
 ├── src/
-│   ├── main.jsx          # React entry point
-│   ├── App.jsx            # Main component — simulation + UI (single-file architecture)
-│   ├── index.css          # Tailwind CSS imports + global styles
-│   └── assets/
-│       └── react.svg
+│   ├── main.jsx                    # React entry point, wraps App in LanguageProvider
+│   ├── App.jsx                     # Root component — canvas + header + narrative panel
+│   ├── index.css                   # Tailwind CSS imports + global styles
+│   ├── narratives.js               # Helper to fetch localized narrative text
+│   ├── components/
+│   │   ├── GameControls.jsx        # Action buttons (broadcast/whisper/listen/reset/continue)
+│   │   └── NarrativePanel.jsx      # Bottom panel showing story text + controls
+│   ├── hooks/
+│   │   ├── useSimulation.js        # Core simulation: stars, waves, attacks, game state machine
+│   │   └── useSound.js             # Web Audio API procedural sound effects
+│   └── i18n/
+│       ├── LanguageContext.jsx      # React context + hooks for language switching
+│       └── translations.js         # EN/FR translation strings and narrative content
 ├── index.html
 ├── vite.config.js
 ├── postcss.config.js
@@ -104,11 +158,33 @@ dark-forest/
 
 ## How It Works
 
-1. **Starfield generation** — On mount, stars are procedurally placed based on screen density (~1 per 8000px). Each star has a 20% chance of being a hidden hunter.
-2. **Broadcast** — Clicking "Broadcast Signal" emits an expanding circular wave from your position at the center of the screen.
-3. **Detection** — When the wave's radius intersects a hunter star (within 5px tolerance), that hunter fires a photoid attack toward your coordinates.
-4. **Destruction** — When a photoid reaches your star, an explosion of 50 particles is triggered, your star is removed, and all hunters are revealed.
-5. **Rendering** — A `requestAnimationFrame` loop draws everything on a canvas with a semi-transparent overlay creating a trail/glow effect.
+1. **Starfield generation** — On mount, stars are procedurally placed based on screen density (~1 per 8000px²). Each star has a 20% chance of being a hidden hunter.
+2. **Player choice** — The player can broadcast (full-range signal), whisper (limited-range signal), or listen (passive observation).
+3. **Broadcast / Whisper** — Emits an expanding circular wave from the player's star. Whisper waves fade out at 200px radius.
+4. **Detection** — When a wave's radius intersects a hunter star (within 5px tolerance), that hunter fires a photoid attack toward the signal's origin.
+5. **Listening** — After a random delay, an NPC civilization broadcasts. Hunters detect it and destroy it, demonstrating the dark forest in action.
+6. **Destruction** — When a photoid reaches its target, an explosion of particles is triggered, the star is removed, and all hunters are revealed.
+7. **Rendering** — A `requestAnimationFrame` loop draws everything on a canvas with a semi-transparent overlay creating a trail/glow effect.
+
+## Development
+
+### Available Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the Vite dev server with hot reload |
+| `npm run build` | Build for production into `dist/` |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint across the project |
+
+### Adding a New Language
+
+1. Add a new key to the `translations` object in `src/i18n/translations.js` (use the `en` entry as a template — all keys must be present).
+2. Add a new button to the `LanguageSwitcher` component in `src/App.jsx`.
+
+### Browser Compatibility
+
+The app uses Canvas 2D, `requestAnimationFrame`, and the Web Audio API. These are supported in all modern browsers (Chrome, Firefox, Safari, Edge).
 
 ## Acknowledgments
 
