@@ -1,11 +1,11 @@
 import { Radio, Volume2, Eye, RefreshCw, ArrowRight } from 'lucide-react';
 import { useTranslation } from '../i18n/LanguageContext';
+import { STATES } from '../simulation/constants';
 
 const GameControls = ({ gameState, pendingState, onBroadcast, onWhisper, onListen, onReset, onAdvance }) => {
   const { t } = useTranslation();
-  const showChoices = ['START', 'WITNESS', 'SAFE'].includes(gameState);
+  const showChoices = [STATES.START, STATES.WITNESS, STATES.SAFE].includes(gameState);
 
-  // Pending transition → show Continue button
   if (pendingState) {
     return (
       <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
@@ -29,7 +29,7 @@ const GameControls = ({ gameState, pendingState, onBroadcast, onWhisper, onListe
             className="group flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(37,99,235,0.3)]"
           >
             <Radio className="w-5 h-5 group-hover:animate-ping" />
-            <span>{gameState === 'WITNESS' ? t('ui.broadcastAnyway') : t('ui.broadcastSignal')}</span>
+            <span>{gameState === STATES.WITNESS ? t('ui.broadcastAnyway') : t('ui.broadcastSignal')}</span>
           </button>
 
           <button
@@ -45,33 +45,33 @@ const GameControls = ({ gameState, pendingState, onBroadcast, onWhisper, onListe
             className="group flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3 bg-gray-900/60 hover:bg-gray-800/80 text-gray-300 rounded-lg transition-all border border-gray-700/50 hover:border-gray-500/70"
           >
             <Eye className="w-5 h-5 opacity-50 group-hover:opacity-100" />
-            <span>{gameState === 'WITNESS' ? t('ui.keepListening') : t('ui.listen')}</span>
+            <span>{gameState === STATES.WITNESS ? t('ui.keepListening') : t('ui.listen')}</span>
           </button>
         </>
       )}
 
-      {gameState === 'BROADCASTING' && (
+      {gameState === STATES.BROADCASTING && (
         <div className="flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3 border border-blue-500/30 bg-blue-900/20 text-blue-300 rounded-lg animate-pulse">
           <Radio className="w-5 h-5 animate-spin" />
           <span>{t('ui.transmitting')}</span>
         </div>
       )}
 
-      {gameState === 'WHISPERING' && (
+      {gameState === STATES.WHISPERING && (
         <div className="flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3 border border-indigo-500/30 bg-indigo-900/20 text-indigo-300 rounded-lg animate-pulse">
           <Volume2 className="w-5 h-5" />
           <span>{t('ui.whispering')}</span>
         </div>
       )}
 
-      {gameState === 'LISTENING' && (
+      {gameState === STATES.LISTENING && (
         <div className="flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3 border border-gray-500/30 bg-gray-900/20 text-gray-400 rounded-lg">
           <Eye className="w-5 h-5 animate-pulse" />
           <span>{t('ui.observing')}</span>
         </div>
       )}
 
-      {gameState === 'DESTROYED' && (
+      {gameState === STATES.DESTROYED && (
         <button
           onClick={onReset}
           className="flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-6 sm:py-3 border border-gray-600 hover:border-gray-400 hover:bg-gray-800 text-gray-300 rounded-lg transition-all"

@@ -1,21 +1,26 @@
-import { useState, useEffect, useRef } from 'react';
-import { getNarratives } from '../narratives';
+import { useState, useEffect } from 'react';
+import { translations } from '../i18n/translations';
 import { useTranslation } from '../i18n/LanguageContext';
+import { STATES } from '../simulation/constants';
 
 const NarrativePanel = ({ gameState, children }) => {
   const { t, lang } = useTranslation();
-  const narratives = getNarratives(lang);
-  const narrative = narratives[gameState] || narratives.START;
+  const narratives = translations[lang]?.narratives ?? translations.en.narratives;
+  const narrative = narratives[gameState] || narratives[STATES.START];
+  const [prevGameState, setPrevGameState] = useState(gameState);
   const [isFading, setIsFading] = useState(false);
-  const prevGameStateRef = useRef(gameState);
+
+  // Adjust state during render (React-recommended pattern for derived state from props)
+  if (gameState !== prevGameState) {
+    setPrevGameState(gameState);
+    setIsFading(true);
+  }
 
   useEffect(() => {
-    if (gameState === prevGameStateRef.current) return;
-    prevGameStateRef.current = gameState;
-    setIsFading(true);
+    if (!isFading) return;
     const timer = setTimeout(() => setIsFading(false), 300);
     return () => clearTimeout(timer);
-  }, [gameState]);
+  }, [isFading]);
 
   return (
     <div className="absolute inset-x-0 bottom-0 pointer-events-none">

@@ -64,7 +64,7 @@ export const useSound = () => {
     gain.gain.setValueAtTime(gain.gain.value, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 2);
     setTimeout(() => {
-      try { osc1.stop(); osc2.stop(); } catch (e) { /* already stopped */ }
+      try { osc1.stop(); osc2.stop(); } catch { /* already stopped */ }
     }, 2200);
     droneRef.current = null;
   }, []);
