@@ -34,10 +34,14 @@ export const useSimulation = (sound) => {
       dimensionsRef.current = { width: w, height: h };
       const canvas = canvasRef.current;
       if (canvas) {
-        canvas.width = w;
-        canvas.height = h;
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
         const ctx = canvas.getContext('2d');
         if (ctx) {
+          ctx.scale(dpr, dpr);
           ctx.fillStyle = 'rgb(5, 5, 10)';
           ctx.fillRect(0, 0, w, h);
         }
@@ -55,8 +59,12 @@ export const useSimulation = (sound) => {
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    canvas.width = width;
-    canvas.height = height;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.scale(dpr, dpr);
 
     const { sim, livingCivs } = createSim(width, height);
     simRef.current = sim;

@@ -15,15 +15,15 @@ const App = () => {
       <canvas ref={canvasRef} className="absolute top-0 left-0 z-0" />
 
       <div className="relative z-10 w-full h-full pointer-events-none">
-        <header className="p-4 sm:p-6 md:p-8 flex flex-wrap gap-2 justify-between items-center bg-gradient-to-b from-black/80 to-transparent pointer-events-auto">
-          <h1 className="text-lg sm:text-xl md:text-2xl tracking-widest uppercase font-bold text-gray-400 border-l-4 border-blue-500 pl-4">
-            {t('ui.title')} <span className="text-gray-600">{t('ui.subtitle')}</span>
+        <header className="p-3 sm:p-6 md:p-8 flex flex-wrap gap-2 justify-between items-center bg-gradient-to-b from-black/80 to-transparent pointer-events-auto">
+          <h1 className="text-base sm:text-xl md:text-2xl tracking-widest uppercase font-bold text-gray-400 border-l-4 border-blue-500 pl-4">
+            {t('ui.title')} <span className="hidden sm:inline text-gray-600">{t('ui.subtitle')}</span>
           </h1>
           <div className="flex items-center gap-4 text-xs text-gray-500">
             <span className="font-mono tabular-nums">{civCount} {t('ui.civilizations')}</span>
             <span className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-              {gameState}
+              <span className="hidden sm:inline">{gameState}</span>
             </span>
             <LanguageSwitcher />
           </div>
@@ -42,7 +42,7 @@ const App = () => {
         </NarrativePanel>
       </div>
 
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]"></div>
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.7)_100%)]"></div>
     </div>
   );
 };

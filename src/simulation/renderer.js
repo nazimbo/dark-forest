@@ -1,5 +1,9 @@
 import { STATES } from './constants';
 
+function getScale(width) {
+  return Math.max(1, Math.min(1.8, 800 / width));
+}
+
 export function drawNebulae(ctx, nebulae) {
   for (const n of nebulae) {
     const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.radius);
@@ -33,10 +37,10 @@ export function drawStars(ctx, stars, gameState) {
   }
 }
 
-export function drawNpcBroadcaster(ctx, npc) {
+export function drawNpcBroadcaster(ctx, npc, scale) {
   if (!npc?.alive) return;
   const pulseSize = npc.size + 1 + Math.sin(Date.now() / 200) * 0.8;
-  ctx.shadowBlur = 10;
+  ctx.shadowBlur = 10 * scale;
   ctx.shadowColor = '#34D399';
   ctx.beginPath();
   ctx.arc(npc.x, npc.y, pulseSize, 0, Math.PI * 2);
@@ -45,16 +49,16 @@ export function drawNpcBroadcaster(ctx, npc) {
   ctx.shadowBlur = 0;
 
   ctx.fillStyle = '#6EE7B7';
-  ctx.font = '10px monospace';
+  ctx.font = `${Math.round(11 * scale)}px monospace`;
   ctx.textAlign = 'center';
-  ctx.fillText('SIGNAL', npc.x, npc.y + 15);
+  ctx.fillText('SIGNAL', npc.x, npc.y + 15 * scale);
 }
 
-export function drawUserStar(ctx, userStar, gameState) {
+export function drawUserStar(ctx, userStar, gameState, scale) {
   if (!userStar?.alive) return;
   const pulseSize = userStar.size + Math.sin(Date.now() / 200);
 
-  ctx.shadowBlur = 15;
+  ctx.shadowBlur = 15 * scale;
   ctx.shadowColor = userStar.color;
   ctx.beginPath();
   ctx.arc(userStar.x, userStar.y, pulseSize, 0, Math.PI * 2);
@@ -64,28 +68,28 @@ export function drawUserStar(ctx, userStar, gameState) {
 
   if (gameState !== STATES.DESTROYED) {
     ctx.fillStyle = '#93C5FD';
-    ctx.font = '10px monospace';
+    ctx.font = `${Math.round(11 * scale)}px monospace`;
     ctx.textAlign = 'center';
-    ctx.fillText('YOU', userStar.x, userStar.y + 15);
+    ctx.fillText('YOU', userStar.x, userStar.y + 15 * scale);
   }
 }
 
-export function drawWaves(ctx, waves) {
+export function drawWaves(ctx, waves, scale) {
   for (const wave of waves) {
     if (wave.alpha <= 0) continue;
     ctx.beginPath();
     ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
     ctx.strokeStyle = `rgba(${wave.color}, ${Math.max(0, wave.alpha)})`;
-    ctx.lineWidth = wave.isWhisper ? 1 : 2;
+    ctx.lineWidth = (wave.isWhisper ? 1.5 : 2.5) * scale;
     ctx.stroke();
   }
 }
 
-export function drawAttacks(ctx, attacks) {
+export function drawAttacks(ctx, attacks, scale) {
   for (const atk of attacks) {
     for (let t = 0; t < atk.trail.length - 1; t++) {
       const trailAlpha = (t / atk.trail.length) * 0.6;
-      const trailWidth = (t / atk.trail.length) * 3;
+      const trailWidth = (t / atk.trail.length) * 3 * scale;
       ctx.beginPath();
       ctx.moveTo(atk.trail[t].x, atk.trail[t].y);
       ctx.lineTo(atk.trail[t + 1].x, atk.trail[t + 1].y);
@@ -96,10 +100,10 @@ export function drawAttacks(ctx, attacks) {
 
     const cx = atk.startX + (atk.targetX - atk.startX) * atk.progress;
     const cy = atk.startY + (atk.targetY - atk.startY) * atk.progress;
-    ctx.shadowBlur = 8;
+    ctx.shadowBlur = 8 * scale;
     ctx.shadowColor = '#EF4444';
     ctx.beginPath();
-    ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+    ctx.arc(cx, cy, 3 * scale, 0, Math.PI * 2);
     ctx.fillStyle = '#fff';
     ctx.fill();
     ctx.shadowBlur = 0;
@@ -114,11 +118,11 @@ export function drawParticles(ctx, particles) {
   }
 }
 
-export function drawFlashes(ctx, flashes) {
+export function drawFlashes(ctx, flashes, scale) {
   for (const f of flashes) {
     ctx.fillStyle = `rgba(255, 255, 255, ${f.life})`;
     ctx.beginPath();
-    ctx.arc(f.x, f.y, 10 * f.life, 0, Math.PI * 2);
+    ctx.arc(f.x, f.y, 10 * scale * f.life, 0, Math.PI * 2);
     ctx.fill();
   }
 }
@@ -136,13 +140,15 @@ export function render(ctx, sim, gameState, width, height) {
   ctx.fillStyle = 'rgba(5, 5, 10, 0.4)';
   ctx.fillRect(-10, -10, width + 20, height + 20);
 
+  const scale = getScale(width);
+
   drawNebulae(ctx, sim.nebulae);
   drawStars(ctx, sim.stars, gameState);
-  drawNpcBroadcaster(ctx, sim.npcBroadcaster);
-  drawUserStar(ctx, sim.userStar, gameState);
-  drawWaves(ctx, sim.waves);
-  drawAttacks(ctx, sim.attacks);
-  drawFlashes(ctx, sim.flashes);
+  drawNpcBroadcaster(ctx, sim.npcBroadcaster, scale);
+  drawUserStar(ctx, sim.userStar, gameState, scale);
+  drawWaves(ctx, sim.waves, scale);
+  drawAttacks(ctx, sim.attacks, scale);
+  drawFlashes(ctx, sim.flashes, scale);
   drawParticles(ctx, sim.particles);
 
   ctx.restore();
