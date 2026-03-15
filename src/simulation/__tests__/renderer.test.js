@@ -133,56 +133,38 @@ describe('drawWaves', () => {
 
 // --- render ---
 
+function makeRenderSim(overrides = {}) {
+  return {
+    shake: { intensity: 0 },
+    nebulae: [],
+    stars: [],
+    npcBroadcaster: null,
+    userStar: { alive: false },
+    waves: [],
+    attacks: [],
+    flashes: [],
+    particles: [],
+    ...overrides,
+  };
+}
+
 describe('render', () => {
   it('calls save and restore', () => {
     const ctx = createMockCanvasCtx();
-    const sim = {
-      shake: { intensity: 0 },
-      nebulae: [],
-      stars: [],
-      npcBroadcaster: null,
-      userStar: { alive: false },
-      waves: [],
-      attacks: [],
-      flashes: [],
-      particles: [],
-    };
-    render(ctx, sim, STATES.START, 800, 600);
+    render(ctx, makeRenderSim(), STATES.START, 800, 600);
     expect(ctx.save).toHaveBeenCalled();
     expect(ctx.restore).toHaveBeenCalled();
   });
 
   it('translates when shake intensity > 0', () => {
     const ctx = createMockCanvasCtx();
-    const sim = {
-      shake: { intensity: 5 },
-      nebulae: [],
-      stars: [],
-      npcBroadcaster: null,
-      userStar: { alive: false },
-      waves: [],
-      attacks: [],
-      flashes: [],
-      particles: [],
-    };
-    render(ctx, sim, STATES.START, 800, 600);
+    render(ctx, makeRenderSim({ shake: { intensity: 5 } }), STATES.START, 800, 600);
     expect(ctx.translate).toHaveBeenCalled();
   });
 
   it('does not translate when shake intensity is 0', () => {
     const ctx = createMockCanvasCtx();
-    const sim = {
-      shake: { intensity: 0 },
-      nebulae: [],
-      stars: [],
-      npcBroadcaster: null,
-      userStar: { alive: false },
-      waves: [],
-      attacks: [],
-      flashes: [],
-      particles: [],
-    };
-    render(ctx, sim, STATES.START, 800, 600);
+    render(ctx, makeRenderSim(), STATES.START, 800, 600);
     expect(ctx.translate).not.toHaveBeenCalled();
   });
 });

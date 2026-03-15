@@ -113,6 +113,8 @@ describe('handleImpact', () => {
     expect(sim.shake.intensity).toBe(10);
     expect(sim.particles).toHaveLength(30);
     expect(sim.npcBroadcaster.alive).toBe(false);
+    // The background star at the NPC position should also be marked dead
+    expect(sim.stars[1].alive).toBe(false);
     expect(ctx.setCivCount).toHaveBeenCalled();
     expect(ctx.sound.playExplosion).toHaveBeenCalled();
     expect(ctx.transitionState).toHaveBeenCalledWith(STATES.WITNESS);

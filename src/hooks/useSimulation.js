@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { STATES } from '../simulation/constants';
 import { createSim } from '../simulation/entities';
 import { updateWaves, updateAttacks, updateParticles, updateFlashes, updateShake, updateScheduledEvents } from '../simulation/physics';
 import { render } from '../simulation/renderer';
@@ -110,7 +111,7 @@ export const useSimulation = (sound) => {
     return () => {
       cancelAnimationFrame(sim.animationId);
     };
-  }, [initKey, setGameState, transitionState, gameStateRef, pendingStateRef]);
+  }, [initKey, setGameState, setCivCount, transitionState, gameStateRef, pendingStateRef]);
 
   // --- Shared cleanup ---
 
@@ -142,7 +143,7 @@ export const useSimulation = (sound) => {
   const listen = useCallback(() => {
     if (!canAct()) return;
     const sim = simRef.current;
-    if (!sim) return;
+    if (!sim?.userStar?.alive) return;
     clearAll();
     doListen(sim, { setGameState });
   }, [setGameState, clearAll, canAct]);
@@ -150,7 +151,7 @@ export const useSimulation = (sound) => {
   const reset = useCallback(() => {
     clearAll();
     soundRef.current?.stopDrone?.();
-    setGameState('START');
+    setGameState(STATES.START);
     setInitKey(k => k + 1);
   }, [setGameState, clearAll]);
 
