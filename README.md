@@ -24,10 +24,10 @@ Press the button. Watch the signal ripple outward at the speed of light. And dis
 - **Photoid attacks** — Red laser-like strikes from detected hunters toward your coordinates
 - **Particle explosion system** — Destruction visualized with physics-based particle effects
 - **Procedural sound design** — Web Audio API synthesis for broadcasts, whispers, detections, and explosions
-- **Multilingual support** — English and French with persistent language preference
+- **Multilingual support** — 7 languages (EN, FR, ES, DE, ZH, JA, PT) with persistent preference
 - **Accessible** — ARIA landmarks, `aria-live` regions, skip navigation, keyboard focus indicators, `prefers-reduced-motion` support, dynamic `lang` attribute
 - **Error resilient** — React ErrorBoundary with fallback UI, canvas/audio context guards with logged errors
-- **Responsive design** — Adapts to any screen size
+- **Responsive design** — Mobile-optimized layout with adaptive typography, stacked controls, and portrait-aware star positioning
 - **Glassmorphism UI** — Semi-transparent narrative panel with backdrop blur
 - **CI pipeline** — GitHub Actions: lint → test → build with build size reporting
 
@@ -145,8 +145,9 @@ dark-forest/
 │   ├── components/
 │   │   ├── ErrorBoundary.jsx       # Catches render errors with fallback UI and reset
 │   │   ├── GameControls.jsx        # Action buttons (broadcast/whisper/listen/reset/continue)
-│   │   ├── LanguageSwitcher.jsx    # EN/FR language toggle
-│   │   └── NarrativePanel.jsx      # Bottom panel showing story text + controls
+│   │   ├── NarrativePanel.jsx      # Bottom panel showing story text + controls
+│   │   ├── Onboarding.jsx          # First-time player tutorial overlay
+│   │   └── SettingsPanel.jsx       # Settings dropdown (language, sound, fullscreen)
 │   ├── hooks/
 │   │   ├── useGameState.js         # Game state machine (states, transitions, refs)
 │   │   ├── useSimulation.js        # Orchestrator — canvas, animation loop, user actions
@@ -160,7 +161,7 @@ dark-forest/
 │   │   └── rules.js                # Game rules (collisions, impacts, user actions)
 │   └── i18n/
 │       ├── LanguageContext.jsx      # React context + hooks for language switching
-│       └── translations.js         # EN/FR translation strings and narrative content
+│       └── translations.js         # Translation strings and narrative content (7 languages)
 ├── .github/
 │   └── workflows/
 │       └── ci.yml                  # GitHub Actions: lint → test → build + size report
@@ -219,7 +220,7 @@ The simulation is split into pure modules (`simulation/`) and React glue (`hooks
 ### Adding a New Language
 
 1. Add a new key to the `translations` object in `src/i18n/translations.js` (use the `en` entry as a template — all keys must be present).
-2. Add a new button to `src/components/LanguageSwitcher.jsx`.
+2. Optionally add a display label in the `LANG_LABELS` map in `src/components/SettingsPanel.jsx` (defaults to uppercase code).
 
 ### CI/CD
 
