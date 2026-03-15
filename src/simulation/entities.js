@@ -41,9 +41,11 @@ export function generateNebulae(width, height) {
 }
 
 export function createUserStar(width, height) {
+  // On portrait mobile, offset upward so the star sits above the narrative panel
+  const isPortraitMobile = width < 640 && height > width;
   return {
     x: width / 2,
-    y: height / 2,
+    y: isPortraitMobile ? height * 0.38 : height / 2,
     size: 4,
     color: '#60A5FA',
     alive: true,

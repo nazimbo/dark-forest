@@ -49,6 +49,16 @@ body, html, #root {
   }
 }
 
+/* Portrait mobile — compact bottom panel */
+@media (max-width: 639px) and (orientation: portrait) {
+  .narrative-panel-gradient {
+    padding-top: 3rem !important;
+  }
+  .narrative-subtext {
+    display: none;
+  }
+}
+
 /* Very small screens (<320px) */
 @media (max-width: 319px) {
   .game-header {
