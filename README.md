@@ -25,8 +25,11 @@ Press the button. Watch the signal ripple outward at the speed of light. And dis
 - **Particle explosion system** — Destruction visualized with physics-based particle effects
 - **Procedural sound design** — Web Audio API synthesis for broadcasts, whispers, detections, and explosions
 - **Multilingual support** — English and French with persistent language preference
+- **Accessible** — ARIA landmarks, `aria-live` regions, skip navigation, keyboard focus indicators, `prefers-reduced-motion` support, dynamic `lang` attribute
+- **Error resilient** — React ErrorBoundary with fallback UI, canvas/audio context guards with logged errors
 - **Responsive design** — Adapts to any screen size
 - **Glassmorphism UI** — Semi-transparent narrative panel with backdrop blur
+- **CI pipeline** — GitHub Actions: lint → test → build with build size reporting
 
 ## The Dark Forest Theory
 
@@ -95,6 +98,7 @@ From these axioms, combined with the **chain of suspicion** (no civilization can
 | [Vite 7](https://vite.dev) | Build tool and dev server |
 | [Tailwind CSS 4](https://tailwindcss.com) | Utility-first styling |
 | [Lucide React](https://lucide.dev) | Icon library |
+| [Vitest](https://vitest.dev) | Unit testing framework |
 | HTML5 Canvas API | Real-time simulation rendering |
 | Web Audio API | Procedural sound synthesis |
 
@@ -135,10 +139,11 @@ dark-forest/
 ├── public/
 │   └── vite.svg
 ├── src/
-│   ├── main.jsx                    # React entry point, wraps App in LanguageProvider
+│   ├── main.jsx                    # Entry point — ErrorBoundary + LanguageProvider + App
 │   ├── App.jsx                     # Root component — canvas + header + narrative panel
-│   ├── index.css                   # Tailwind CSS imports + global styles
+│   ├── index.css                   # Tailwind CSS imports + accessibility styles
 │   ├── components/
+│   │   ├── ErrorBoundary.jsx       # Catches render errors with fallback UI and reset
 │   │   ├── GameControls.jsx        # Action buttons (broadcast/whisper/listen/reset/continue)
 │   │   ├── LanguageSwitcher.jsx    # EN/FR language toggle
 │   │   └── NarrativePanel.jsx      # Bottom panel showing story text + controls
@@ -147,6 +152,7 @@ dark-forest/
 │   │   ├── useSimulation.js        # Orchestrator — canvas, animation loop, user actions
 │   │   └── useSound.js             # Web Audio API procedural sound effects
 │   ├── simulation/
+│   │   ├── __tests__/              # Unit tests (constants, entities, physics, renderer, rules)
 │   │   ├── constants.js            # Game constants (states, speeds, ratios)
 │   │   ├── entities.js             # Factory functions (stars, waves, attacks, particles)
 │   │   ├── physics.js              # Frame updates (waves, attacks, particles, shake)
@@ -155,6 +161,9 @@ dark-forest/
 │   └── i18n/
 │       ├── LanguageContext.jsx      # React context + hooks for language switching
 │       └── translations.js         # EN/FR translation strings and narrative content
+├── .github/
+│   └── workflows/
+│       └── ci.yml                  # GitHub Actions: lint → test → build + size report
 ├── index.html
 ├── vite.config.js
 ├── postcss.config.js
@@ -205,11 +214,17 @@ The simulation is split into pure modules (`simulation/`) and React glue (`hooks
 | `npm run build` | Build for production into `dist/` |
 | `npm run preview` | Preview the production build locally |
 | `npm run lint` | Run ESLint across the project |
+| `npm test` | Run unit tests with Vitest |
 
 ### Adding a New Language
 
 1. Add a new key to the `translations` object in `src/i18n/translations.js` (use the `en` entry as a template — all keys must be present).
-2. Add a new button to the `LanguageSwitcher` component in `src/App.jsx`.
+2. Add a new button to `src/components/LanguageSwitcher.jsx`.
+
+### CI/CD
+
+- **CI** — GitHub Actions runs lint, tests, and build on every push/PR to `main`, with a build size report in the job summary.
+- **Deployment** — Vercel deploys automatically on push to `main`.
 
 ### Browser Compatibility
 
