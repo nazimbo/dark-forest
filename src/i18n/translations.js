@@ -14,6 +14,13 @@ export const translations = {
       whispering: 'Whispering...',
       observing: 'Observing the void...',
       rebirth: 'Rebirth Civilization',
+      ariaLangEn: 'Switch to English',
+      ariaLangFr: 'Switch to French',
+      ariaLangGroup: 'Language selection',
+      ariaSimulation: 'Dark forest space simulation — visual canvas',
+      ariaSkip: 'Skip to game controls',
+      ariaGameControls: 'Game controls',
+      ariaNarrative: 'Narrative and story progression',
     },
     narratives: {
       START: {
@@ -74,6 +81,13 @@ export const translations = {
       whispering: 'Murmure en cours...',
       observing: 'Observation du vide...',
       rebirth: 'Renaissance de la Civilisation',
+      ariaLangEn: 'Passer en anglais',
+      ariaLangFr: 'Passer en français',
+      ariaLangGroup: 'Sélection de la langue',
+      ariaSimulation: 'Simulation spatiale de la forêt sombre — canvas visuel',
+      ariaSkip: 'Aller aux contrôles du jeu',
+      ariaGameControls: 'Contrôles du jeu',
+      ariaNarrative: 'Narration et progression de l\'histoire',
     },
     narratives: {
       START: {

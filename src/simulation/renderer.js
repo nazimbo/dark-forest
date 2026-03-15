@@ -127,10 +127,10 @@ export function drawFlashes(ctx, flashes, scale) {
   }
 }
 
-export function render(ctx, sim, gameState, width, height) {
+export function render(ctx, sim, gameState, width, height, reducedMotion) {
   ctx.save();
 
-  if (sim.shake.intensity > 0) {
+  if (!reducedMotion && sim.shake.intensity > 0) {
     ctx.translate(
       (Math.random() - 0.5) * sim.shake.intensity,
       (Math.random() - 0.5) * sim.shake.intensity

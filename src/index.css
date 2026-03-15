@@ -7,3 +7,35 @@ body, html, #root {
   background: black;
   overflow: hidden;
 }
+
+/* Keyboard focus indicators */
+:focus-visible {
+  outline: 2px solid #60A5FA;
+  outline-offset: 2px;
+}
+
+/* Skip navigation link — visible only on focus */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  background: #1E40AF;
+  color: white;
+  border-radius: 0 0 0.5rem 0.5rem;
+  font-size: 0.875rem;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

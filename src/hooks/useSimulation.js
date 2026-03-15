@@ -12,6 +12,16 @@ export const useSimulation = (sound) => {
   const [initKey, setInitKey] = useState(0);
   const [civCount, setCivCount] = useState(0);
 
+  // Track prefers-reduced-motion for accessible rendering
+  const reducedMotionRef = useRef(false);
+  useEffect(() => {
+    const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+    reducedMotionRef.current = mql.matches;
+    const handler = (e) => { reducedMotionRef.current = e.matches; };
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
+
   const {
     gameState, gameStateRef, pendingState, pendingStateRef,
     setGameState, setPendingState, transitionState, advance, canAct,
@@ -101,7 +111,7 @@ export const useSimulation = (sound) => {
       }
 
       const { width: curW, height: curH } = dimensionsRef.current;
-      render(ctx, sim, currentState, curW, curH);
+      render(ctx, sim, currentState, curW, curH, reducedMotionRef.current);
 
       sim.animationId = requestAnimationFrame(loop);
     };

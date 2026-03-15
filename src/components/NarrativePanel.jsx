@@ -23,16 +23,17 @@ const NarrativePanel = ({ gameState, children }) => {
   }, [isFading]);
 
   return (
-    <div className="absolute inset-x-0 bottom-0 pointer-events-none">
+    <div className="absolute inset-x-0 bottom-0 pointer-events-none" role="region" aria-label={t('ui.ariaNarrative')}>
       <div className="bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-24 pb-[max(1.5rem,env(safe-area-inset-bottom))] px-6 sm:px-10 md:px-16">
 
-        <div className={`text-center mb-3 transition-all duration-300 ${isFading ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
+        <div aria-live="polite" aria-atomic="true" className={`text-center mb-3 transition-all duration-300 ${isFading ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
           <span className="text-blue-400/80 text-xs sm:text-sm uppercase tracking-[0.25em] font-medium">
             {narrative.title}
           </span>
         </div>
 
         <p
+          aria-live="polite"
           className={`text-center text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed transition-opacity duration-300 ${isFading ? 'opacity-0' : 'opacity-100'}`}
           style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}
         >
@@ -43,7 +44,7 @@ const NarrativePanel = ({ gameState, children }) => {
           {narrative.subtext}
         </p>
 
-        <div className="flex justify-center mt-5 pointer-events-auto">
+        <div id="game-controls" className="flex justify-center mt-5 pointer-events-auto">
           {children}
         </div>
 
