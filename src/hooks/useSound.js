@@ -16,23 +16,28 @@ export const useSound = () => {
   const masterRef = useRef(null);
 
   const getCtx = useCallback(() => {
-    if (!ctxRef.current) {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      ctxRef.current = ctx;
-      const master = ctx.createGain();
-      master.gain.value = 0.3;
-      master.connect(ctx.destination);
-      masterRef.current = master;
+    try {
+      if (!ctxRef.current) {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        ctxRef.current = ctx;
+        const master = ctx.createGain();
+        master.gain.value = 0.3;
+        master.connect(ctx.destination);
+        masterRef.current = master;
+      }
+      if (ctxRef.current.state === 'suspended') {
+        ctxRef.current.resume();
+      }
+      return ctxRef.current;
+    } catch (e) {
+      console.warn('[useSound] AudioContext unavailable:', e.message);
+      return null;
     }
-    if (ctxRef.current.state === 'suspended') {
-      ctxRef.current.resume();
-    }
-    return ctxRef.current;
   }, []);
 
   const startDrone = useCallback(() => {
     const ctx = getCtx();
-    if (droneRef.current) return;
+    if (!ctx || droneRef.current) return;
 
     const osc1 = ctx.createOscillator();
     const osc2 = ctx.createOscillator();
@@ -64,13 +69,14 @@ export const useSound = () => {
     gain.gain.setValueAtTime(gain.gain.value, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 2);
     setTimeout(() => {
-      try { osc1.stop(); osc2.stop(); } catch { /* already stopped */ }
+      try { osc1.stop(); osc2.stop(); } catch (e) { console.warn('[useSound] stopDrone:', e.message); }
     }, 2200);
     droneRef.current = null;
   }, []);
 
   const playBroadcast = useCallback(() => {
     const ctx = getCtx();
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     const now = ctx.currentTime;
@@ -91,6 +97,7 @@ export const useSound = () => {
 
   const playWhisper = useCallback(() => {
     const ctx = getCtx();
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     const now = ctx.currentTime;
@@ -110,6 +117,7 @@ export const useSound = () => {
 
   const playDetection = useCallback(() => {
     const ctx = getCtx();
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     const now = ctx.currentTime;
@@ -129,6 +137,7 @@ export const useSound = () => {
 
   const playExplosion = useCallback(() => {
     const ctx = getCtx();
+    if (!ctx) return;
     const now = ctx.currentTime;
 
     // Noise burst
@@ -176,7 +185,7 @@ export const useSound = () => {
     return () => {
       stopDrone();
       if (ctxRef.current) {
-        ctxRef.current.close().catch(() => {});
+        ctxRef.current.close().catch((e) => console.warn('[useSound] close:', e.message));
       }
     };
   }, [stopDrone]);

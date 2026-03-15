@@ -69,7 +69,17 @@ export const useSimulation = (sound) => {
     if (width === 0 || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    let ctx;
+    try {
+      ctx = canvas.getContext('2d');
+    } catch (e) {
+      console.error('[useSimulation] Failed to get canvas 2d context:', e);
+      return;
+    }
+    if (!ctx) {
+      console.error('[useSimulation] canvas.getContext("2d") returned null');
+      return;
+    }
     const dpr = window.devicePixelRatio || 1;
     canvas.width = width * dpr;
     canvas.height = height * dpr;
