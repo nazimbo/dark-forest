@@ -34,6 +34,6 @@
 - [x] Add fallback for very small screens (<320px)
 
 ## Internationalization
-- [ ] Add more languages (ES, DE, ZH, JA, AR, PT...)
+- [x] Add more languages (ES, DE, ZH, JA, PT)
 - [ ] Add RTL layout support for Arabic/Hebrew
 - [ ] Add pluralization support for future strings

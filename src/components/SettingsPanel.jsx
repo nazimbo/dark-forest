@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Settings, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
 import { useLanguage, useTranslation } from '../i18n/LanguageContext';
+import { translations } from '../i18n/translations';
+
+const LANG_LABELS = { en: 'EN', fr: 'FR', es: 'ES', de: 'DE', zh: '\u4e2d', ja: '\u65e5', pt: 'PT' };
+const LANG_CODES = Object.keys(translations);
 
 const SettingsPanel = ({ isMuted, onToggleMute }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,23 +71,18 @@ const SettingsPanel = ({ isMuted, onToggleMute }) => {
           {/* Language */}
           <div className="px-3 py-2">
             <span className="text-[10px] uppercase tracking-widest text-gray-500">{t('ui.language')}</span>
-            <div className="flex gap-1 mt-1.5">
-              <button
-                role="menuitemradio"
-                aria-checked={lang === 'en'}
-                onClick={() => setLang('en')}
-                className={`flex-1 px-3 py-1.5 text-xs rounded-md transition-colors ${lang === 'en' ? 'bg-white/15 text-gray-200' : 'text-gray-500 hover:text-gray-300 hover:bg-white/5'}`}
-              >
-                EN
-              </button>
-              <button
-                role="menuitemradio"
-                aria-checked={lang === 'fr'}
-                onClick={() => setLang('fr')}
-                className={`flex-1 px-3 py-1.5 text-xs rounded-md transition-colors ${lang === 'fr' ? 'bg-white/15 text-gray-200' : 'text-gray-500 hover:text-gray-300 hover:bg-white/5'}`}
-              >
-                FR
-              </button>
+            <div className="grid grid-cols-4 gap-1 mt-1.5">
+              {LANG_CODES.map(code => (
+                <button
+                  key={code}
+                  role="menuitemradio"
+                  aria-checked={lang === code}
+                  onClick={() => setLang(code)}
+                  className={`px-2 py-1.5 text-xs rounded-md transition-colors ${lang === code ? 'bg-white/15 text-gray-200' : 'text-gray-500 hover:text-gray-300 hover:bg-white/5'}`}
+                >
+                  {LANG_LABELS[code] ?? code.toUpperCase()}
+                </button>
+              ))}
             </div>
           </div>
 
