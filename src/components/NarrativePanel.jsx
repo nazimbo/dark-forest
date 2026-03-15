@@ -24,7 +24,7 @@ const NarrativePanel = ({ gameState, children }) => {
 
   return (
     <div className="absolute inset-x-0 bottom-0 pointer-events-none" role="region" aria-label={t('ui.ariaNarrative')}>
-      <div className="bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-24 pb-[max(1.5rem,env(safe-area-inset-bottom))] px-6 sm:px-10 md:px-16">
+      <div className="narrative-panel-gradient bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-24 pb-[max(1.5rem,env(safe-area-inset-bottom))] px-6 sm:px-10 md:px-16">
 
         <div aria-live="polite" aria-atomic="true" className={`text-center mb-3 transition-all duration-300 ${isFading ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
           <span className="text-blue-400/80 text-xs sm:text-sm uppercase tracking-[0.25em] font-medium">
@@ -34,13 +34,13 @@ const NarrativePanel = ({ gameState, children }) => {
 
         <p
           aria-live="polite"
-          className={`text-center text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed transition-opacity duration-300 ${isFading ? 'opacity-0' : 'opacity-100'}`}
+          className={`narrative-text text-center text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl mx-auto leading-relaxed transition-opacity duration-300 ${isFading ? 'opacity-0' : 'opacity-100'}`}
           style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}
         >
           {narrative.text}
         </p>
 
-        <p className={`text-center text-xs sm:text-sm text-gray-500 italic max-w-xl mx-auto mt-2 transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`}>
+        <p className={`narrative-subtext text-center text-xs sm:text-sm text-gray-500 italic max-w-xl mx-auto mt-2 transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`}>
           {narrative.subtext}
         </p>
 
@@ -48,7 +48,7 @@ const NarrativePanel = ({ gameState, children }) => {
           {children}
         </div>
 
-        <div className="text-center mt-4 text-xs text-gray-700">
+        <div className="narrative-quote text-center mt-4 text-xs text-gray-700">
           {t('quote')}
         </div>
       </div>

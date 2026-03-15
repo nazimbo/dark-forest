@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect } from 'react';
+import { useRef, useCallback, useEffect, useState } from 'react';
 
 // All sounds are synthesized at runtime via the Web Audio API — no audio files needed.
 // Sound design overview:
@@ -15,13 +15,30 @@ export const useSound = () => {
   const droneRef = useRef(null);
   const masterRef = useRef(null);
 
+  const [isMuted, setIsMuted] = useState(() => {
+    try { return localStorage.getItem('dark-forest-muted') === 'true'; } catch { return false; }
+  });
+  const mutedRef = useRef(isMuted);
+
+  const toggleMute = useCallback(() => {
+    setIsMuted(prev => {
+      const next = !prev;
+      mutedRef.current = next;
+      try { localStorage.setItem('dark-forest-muted', String(next)); } catch { /* noop */ }
+      if (masterRef.current) {
+        masterRef.current.gain.value = next ? 0 : 0.3;
+      }
+      return next;
+    });
+  }, []);
+
   const getCtx = useCallback(() => {
     try {
       if (!ctxRef.current) {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         ctxRef.current = ctx;
         const master = ctx.createGain();
-        master.gain.value = 0.3;
+        master.gain.value = mutedRef.current ? 0 : 0.3;
         master.connect(ctx.destination);
         masterRef.current = master;
       }
@@ -190,5 +207,5 @@ export const useSound = () => {
     };
   }, [stopDrone]);
 
-  return { startDrone, stopDrone, playBroadcast, playWhisper, playDetection, playExplosion };
+  return { startDrone, stopDrone, playBroadcast, playWhisper, playDetection, playExplosion, isMuted, toggleMute };
 };

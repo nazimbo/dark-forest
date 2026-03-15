@@ -2,7 +2,8 @@ import { useSimulation } from './hooks/useSimulation';
 import { useSound } from './hooks/useSound';
 import NarrativePanel from './components/NarrativePanel';
 import GameControls from './components/GameControls';
-import LanguageSwitcher from './components/LanguageSwitcher';
+import SettingsPanel from './components/SettingsPanel';
+import Onboarding from './components/Onboarding';
 import { useTranslation } from './i18n/LanguageContext';
 
 const App = () => {
@@ -22,7 +23,7 @@ const App = () => {
       />
 
       <div className="relative z-10 w-full h-full pointer-events-none">
-        <header className="p-3 sm:p-6 md:p-8 flex flex-wrap gap-2 justify-between items-center bg-gradient-to-b from-black/80 to-transparent pointer-events-auto">
+        <header className="game-header p-3 sm:p-6 md:p-8 flex flex-wrap gap-2 justify-between items-center bg-gradient-to-b from-black/80 to-transparent pointer-events-auto">
           <h1 className="text-base sm:text-xl md:text-2xl tracking-widest uppercase font-bold text-gray-400 border-l-4 border-blue-500 pl-4">
             {t('ui.title')} <span className="hidden sm:inline text-gray-600">{t('ui.subtitle')}</span>
           </h1>
@@ -32,7 +33,7 @@ const App = () => {
               <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" aria-hidden="true"></span>
               <span className="hidden sm:inline">{gameState}</span>
             </span>
-            <LanguageSwitcher />
+            <SettingsPanel isMuted={sound.isMuted} onToggleMute={sound.toggleMute} />
           </div>
         </header>
 
@@ -52,6 +53,8 @@ const App = () => {
       </div>
 
       <div aria-hidden="true" className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.7)_100%)]"></div>
+
+      <Onboarding />
     </div>
   );
 };

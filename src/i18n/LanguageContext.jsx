@@ -1,16 +1,21 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { translations } from './translations';
 
+const SUPPORTED_LANGS = Object.keys(translations);
+
+const detectLang = () => {
+  try {
+    const stored = localStorage.getItem('dark-forest-lang');
+    if (stored && SUPPORTED_LANGS.includes(stored)) return stored;
+  } catch { /* localStorage unavailable */ }
+  const browser = navigator.language?.slice(0, 2);
+  return SUPPORTED_LANGS.includes(browser) ? browser : 'en';
+};
+
 const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
-  const [lang, setLang] = useState(() => {
-    try {
-      return localStorage.getItem('dark-forest-lang') || 'en';
-    } catch {
-      return 'en';
-    }
-  });
+  const [lang, setLang] = useState(detectLang);
 
   // Keep <html lang> in sync with the selected language
   useEffect(() => {

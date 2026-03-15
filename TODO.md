@@ -25,13 +25,13 @@
 - [ ] Add NPC alliances / responses to other broadcasts
 
 ## UX Polish
-- [ ] Add volume control UI (slider or mute toggle)
-- [ ] Add settings panel (language, volume, accessibility options)
-- [ ] Detect browser locale for default language instead of hardcoded 'en'
-- [ ] Add onboarding / tutorial for first-time players
-- [ ] Add fullscreen mode (Fullscreen API)
-- [ ] Handle landscape mode on mobile more gracefully
-- [ ] Add fallback for very small screens (<320px)
+- [x] Add volume control UI (slider or mute toggle)
+- [x] Add settings panel (language, volume, accessibility options)
+- [x] Detect browser locale for default language instead of hardcoded 'en'
+- [x] Add onboarding / tutorial for first-time players
+- [x] Add fullscreen mode (Fullscreen API)
+- [x] Handle landscape mode on mobile more gracefully
+- [x] Add fallback for very small screens (<320px)
 
 ## Internationalization
 - [ ] Add more languages (ES, DE, ZH, JA, AR, PT...)
