@@ -35,5 +35,5 @@
 
 ## Internationalization
 - [x] Add more languages (ES, DE, ZH, JA, PT)
-- [ ] Add RTL layout support for Arabic/Hebrew
-- [ ] Add pluralization support for future strings
+- [x] Add RTL layout support for Arabic/Hebrew
+- [x] Add pluralization support for future strings

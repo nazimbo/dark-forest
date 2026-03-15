@@ -12,14 +12,17 @@ const detectLang = () => {
   return SUPPORTED_LANGS.includes(browser) ? browser : 'en';
 };
 
+const RTL_LANGS = new Set(['ar', 'he']);
+
 const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
   const [lang, setLang] = useState(detectLang);
 
-  // Keep <html lang> in sync with the selected language
+  // Keep <html lang> and dir in sync with the selected language
   useEffect(() => {
     document.documentElement.lang = lang;
+    document.documentElement.dir = RTL_LANGS.has(lang) ? 'rtl' : 'ltr';
   }, [lang]);
 
   const changeLang = useCallback((newLang) => {
@@ -49,11 +52,15 @@ export const useLanguage = () => {
 export const useTranslation = () => {
   const { lang } = useLanguage();
   const t = useCallback(
-    (key) => {
+    (key, { count } = {}) => {
       const keys = key.split('.');
       let val = translations[lang];
       for (const k of keys) {
         val = val?.[k];
+      }
+      if (val && typeof val === 'object') {
+        const rule = count !== undefined ? new Intl.PluralRules(lang).select(count) : 'other';
+        return val[rule] ?? val.other ?? key;
       }
       return val ?? key;
     },

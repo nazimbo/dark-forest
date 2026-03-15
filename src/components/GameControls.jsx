@@ -14,7 +14,7 @@ const GameControls = ({ gameState, pendingState, onBroadcast, onWhisper, onListe
           className="group flex items-center gap-2.5 sm:gap-3 px-6 py-3 min-h-[44px] bg-white/10 hover:bg-white/20 text-gray-200 rounded-lg transition-all border border-white/20 hover:border-white/40"
         >
           <span>{t('ui.continue')}</span>
-          <ArrowRight aria-hidden="true" className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          <ArrowRight aria-hidden="true" className="w-4 h-4 ltr:group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
         </button>
       </div>
     );

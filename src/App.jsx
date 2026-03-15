@@ -24,11 +24,11 @@ const App = () => {
 
       <div className="relative z-10 w-full h-full pointer-events-none">
         <header className="game-header p-2 sm:p-6 md:p-8 flex flex-wrap gap-1 sm:gap-2 justify-between items-center bg-linear-to-b from-black/80 to-transparent pointer-events-auto">
-          <h1 className="text-sm sm:text-xl md:text-2xl tracking-widest uppercase font-bold text-gray-400 border-l-2 sm:border-l-4 border-blue-500 pl-2 sm:pl-4">
+          <h1 className="text-sm sm:text-xl md:text-2xl tracking-widest uppercase font-bold text-gray-400 border-s-2 sm:border-s-4 border-blue-500 ps-2 sm:ps-4">
             {t('ui.title')} <span className="hidden sm:inline text-gray-600">{t('ui.subtitle')}</span>
           </h1>
           <div className="flex items-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-gray-500">
-            <span className="font-mono tabular-nums">{civCount} {t('ui.civilizations')}</span>
+            <span className="font-mono tabular-nums">{civCount} {t('ui.civilizations', { count: civCount })}</span>
             <span className="hidden sm:flex items-center gap-2" role="status" aria-live="polite">
               <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" aria-hidden="true"></span>
               <span className="hidden sm:inline">{gameState}</span>

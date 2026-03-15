@@ -3,7 +3,7 @@ import { Settings, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
 import { useLanguage, useTranslation } from '../i18n/LanguageContext';
 import { translations } from '../i18n/translations';
 
-const LANG_LABELS = { en: 'EN', fr: 'FR', es: 'ES', de: 'DE', zh: '\u4e2d', ja: '\u65e5', pt: 'PT' };
+const LANG_LABELS = { en: 'EN', fr: 'FR', es: 'ES', de: 'DE', zh: '\u4e2d', ja: '\u65e5', pt: 'PT', ar: '\u0639\u0631', he: '\u05e2\u05d1' };
 const LANG_CODES = Object.keys(translations);
 
 const SettingsPanel = ({ isMuted, onToggleMute }) => {
@@ -66,12 +66,12 @@ const SettingsPanel = ({ isMuted, onToggleMute }) => {
       {isOpen && (
         <div
           role="menu"
-          className="absolute right-0 top-full mt-2 bg-black/95 border border-white/15 rounded-xl p-2 min-w-[180px] backdrop-blur-sm shadow-xl shadow-black/50 animate-in"
+          className="absolute end-0 top-full mt-2 bg-black/95 border border-white/15 rounded-xl p-2 min-w-[180px] backdrop-blur-sm shadow-xl shadow-black/50 animate-in"
         >
           {/* Language */}
           <div className="px-3 py-2">
             <span className="text-[10px] uppercase tracking-widest text-gray-500">{t('ui.language')}</span>
-            <div className="grid grid-cols-4 gap-1 mt-1.5">
+            <div className="grid grid-cols-3 gap-1 mt-1.5">
               {LANG_CODES.map(code => (
                 <button
                   key={code}

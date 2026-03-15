@@ -24,7 +24,7 @@ Press the button. Watch the signal ripple outward at the speed of light. And dis
 - **Photoid attacks** — Red laser-like strikes from detected hunters toward your coordinates
 - **Particle explosion system** — Destruction visualized with physics-based particle effects
 - **Procedural sound design** — Web Audio API synthesis for broadcasts, whispers, detections, and explosions
-- **Multilingual support** — 7 languages (EN, FR, ES, DE, ZH, JA, PT) with persistent preference
+- **Multilingual support** — 9 languages (EN, FR, ES, DE, ZH, JA, PT, AR, HE) with RTL support, pluralization, and persistent preference
 - **Accessible** — ARIA landmarks, `aria-live` regions, skip navigation, keyboard focus indicators, `prefers-reduced-motion` support, dynamic `lang` attribute
 - **Error resilient** — React ErrorBoundary with fallback UI, canvas/audio context guards with logged errors
 - **Responsive design** — Mobile-optimized layout with adaptive typography, stacked controls, and portrait-aware star positioning
@@ -161,7 +161,7 @@ dark-forest/
 │   │   └── rules.js                # Game rules (collisions, impacts, user actions)
 │   └── i18n/
 │       ├── LanguageContext.jsx      # React context + hooks for language switching
-│       └── translations.js         # Translation strings and narrative content (7 languages)
+│       └── translations.js         # Translation strings and narrative content (9 languages)
 ├── .github/
 │   └── workflows/
 │       └── ci.yml                  # GitHub Actions: lint → test → build + size report
