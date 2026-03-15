@@ -24,7 +24,7 @@ const NarrativePanel = ({ gameState, children }) => {
 
   return (
     <div className="absolute inset-x-0 bottom-0 pointer-events-none" role="region" aria-label={t('ui.ariaNarrative')}>
-      <div className="narrative-panel-gradient bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-12 sm:pt-24 pb-[max(1rem,env(safe-area-inset-bottom))] sm:pb-[max(1.5rem,env(safe-area-inset-bottom))] px-4 sm:px-10 md:px-16">
+      <div className="narrative-panel-gradient bg-linear-to-t from-black/90 via-black/50 to-transparent pt-12 sm:pt-24 pb-[max(1rem,env(safe-area-inset-bottom))] sm:pb-[max(1.5rem,env(safe-area-inset-bottom))] px-4 sm:px-10 md:px-16">
 
         <div aria-live="polite" aria-atomic="true" className={`text-center mb-1.5 sm:mb-3 transition-all duration-300 ${isFading ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
           <span className="text-blue-400/80 text-[10px] sm:text-sm uppercase tracking-[0.25em] font-medium">

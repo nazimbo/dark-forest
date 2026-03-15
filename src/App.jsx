@@ -23,7 +23,7 @@ const App = () => {
       />
 
       <div className="relative z-10 w-full h-full pointer-events-none">
-        <header className="game-header p-2 sm:p-6 md:p-8 flex flex-wrap gap-1 sm:gap-2 justify-between items-center bg-gradient-to-b from-black/80 to-transparent pointer-events-auto">
+        <header className="game-header p-2 sm:p-6 md:p-8 flex flex-wrap gap-1 sm:gap-2 justify-between items-center bg-linear-to-b from-black/80 to-transparent pointer-events-auto">
           <h1 className="text-sm sm:text-xl md:text-2xl tracking-widest uppercase font-bold text-gray-400 border-l-2 sm:border-l-4 border-blue-500 pl-2 sm:pl-4">
             {t('ui.title')} <span className="hidden sm:inline text-gray-600">{t('ui.subtitle')}</span>
           </h1>
