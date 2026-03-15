@@ -6,9 +6,9 @@
 - [x] Log sound errors instead of silently swallowing them
 
 ## CI/CD & Deployment
-- [ ] Add GitHub Actions workflow: lint → test → build → deploy
-- [ ] Configure deployment target (Vercel, Netlify, or GitHub Pages)
-- [ ] Add build size monitoring
+- [x] Add GitHub Actions workflow: lint → test → build
+- [x] Configure deployment target (Vercel — already deployed)
+- [x] Add build size monitoring
 
 ## Testing
 - [ ] Add component tests for GameControls, NarrativePanel, LanguageSwitcher
