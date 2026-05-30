@@ -12,7 +12,7 @@ const detectLang = () => {
   return SUPPORTED_LANGS.includes(browser) ? browser : 'en';
 };
 
-const RTL_LANGS = new Set(['ar', 'he']);
+const RTL_LANGS = new Set(['ar', 'fa', 'he']);
 
 const LanguageContext = createContext();
 

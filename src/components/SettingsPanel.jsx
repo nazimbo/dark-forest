@@ -3,7 +3,7 @@ import { Settings, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
 import { useLanguage, useTranslation } from '../i18n/LanguageContext';
 import { translations } from '../i18n/translations';
 
-const LANG_LABELS = { en: 'EN', fr: 'FR', es: 'ES', de: 'DE', zh: '\u4e2d', ja: '\u65e5', pt: 'PT', ar: '\u0639\u0631', he: '\u05e2\u05d1' };
+const LANG_LABELS = { en: 'EN', fr: 'FR', es: 'ES', de: 'DE', zh: '\u4e2d', ja: '\u65e5', pt: 'PT', ar: '\u0639\u0631', fa: '\u0641\u0627', he: '\u05e2\u05d1' };
 const LANG_CODES = Object.keys(translations);
 
 const SettingsPanel = ({ isMuted, onToggleMute }) => {
