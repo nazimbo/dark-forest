@@ -3,6 +3,7 @@ import { STATES } from '../simulation/constants';
 import { createSim } from '../simulation/entities';
 import { updateWaves, updateAttacks, updateParticles, updateFlashes, updateShake, updateScheduledEvents } from '../simulation/physics';
 import { render } from '../simulation/renderer';
+import { RGB } from '../simulation/palette';
 import { handleCollision, handleImpact, handleScheduledEvent, clearEffects, doBroadcast, doWhisper, doListen } from '../simulation/rules';
 import { useGameState } from './useGameState';
 
@@ -58,7 +59,7 @@ export const useSimulation = (sound, labels) => {
         const ctx = canvas.getContext('2d');
         if (ctx) {
           ctx.scale(dpr, dpr);
-          ctx.fillStyle = 'rgb(5, 5, 10)';
+          ctx.fillStyle = `rgb(${RGB.space})`;
           ctx.fillRect(0, 0, w, h);
         }
       }

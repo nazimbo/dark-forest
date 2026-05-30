@@ -1,4 +1,5 @@
 import { STATES } from './constants';
+import { RGB, HEX } from './palette';
 
 function getScale(width) {
   return Math.max(1, Math.min(1.8, 800 / width));
@@ -27,11 +28,11 @@ export function drawStars(ctx, stars, gameState) {
     ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
 
     if (star.isHunter && gameState === STATES.DESTROYED) {
-      ctx.fillStyle = `rgba(239, 68, 68, ${star.alpha})`;
+      ctx.fillStyle = `rgba(${RGB.hunter}, ${star.alpha})`;
     } else if (!star.alive) {
-      ctx.fillStyle = `rgba(255, 100, 50, ${star.alpha * 0.3})`;
+      ctx.fillStyle = `rgba(${RGB.ember}, ${star.alpha * 0.3})`;
     } else {
-      ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+      ctx.fillStyle = `rgba(${RGB.white}, ${star.alpha})`;
     }
     ctx.fill();
   }
@@ -41,14 +42,14 @@ export function drawNpcBroadcaster(ctx, npc, scale, label = 'SIGNAL') {
   if (!npc?.alive) return;
   const pulseSize = npc.size + 1 + Math.sin(Date.now() / 200) * 0.8;
   ctx.shadowBlur = 10 * scale;
-  ctx.shadowColor = '#34D399';
+  ctx.shadowColor = HEX.broadcaster;
   ctx.beginPath();
   ctx.arc(npc.x, npc.y, pulseSize, 0, Math.PI * 2);
-  ctx.fillStyle = '#34D399';
+  ctx.fillStyle = HEX.broadcaster;
   ctx.fill();
   ctx.shadowBlur = 0;
 
-  ctx.fillStyle = '#6EE7B7';
+  ctx.fillStyle = HEX.broadcasterLabel;
   ctx.font = `${Math.round(11 * scale)}px monospace`;
   ctx.textAlign = 'center';
   ctx.fillText(label, npc.x, npc.y + 15 * scale);
@@ -67,7 +68,7 @@ export function drawUserStar(ctx, userStar, gameState, scale, label = 'YOU') {
   ctx.shadowBlur = 0;
 
   if (gameState !== STATES.DESTROYED) {
-    ctx.fillStyle = '#93C5FD';
+    ctx.fillStyle = HEX.userLabel;
     ctx.font = `${Math.round(11 * scale)}px monospace`;
     ctx.textAlign = 'center';
     ctx.fillText(label, userStar.x, userStar.y + 15 * scale);
@@ -93,7 +94,7 @@ export function drawAttacks(ctx, attacks, scale) {
       ctx.beginPath();
       ctx.moveTo(atk.trail[t].x, atk.trail[t].y);
       ctx.lineTo(atk.trail[t + 1].x, atk.trail[t + 1].y);
-      ctx.strokeStyle = `rgba(239, 68, 68, ${trailAlpha})`;
+      ctx.strokeStyle = `rgba(${RGB.hunter}, ${trailAlpha})`;
       ctx.lineWidth = trailWidth;
       ctx.stroke();
     }
@@ -101,10 +102,10 @@ export function drawAttacks(ctx, attacks, scale) {
     const cx = atk.startX + (atk.targetX - atk.startX) * atk.progress;
     const cy = atk.startY + (atk.targetY - atk.startY) * atk.progress;
     ctx.shadowBlur = 8 * scale;
-    ctx.shadowColor = '#EF4444';
+    ctx.shadowColor = HEX.attackGlow;
     ctx.beginPath();
     ctx.arc(cx, cy, 3 * scale, 0, Math.PI * 2);
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = HEX.attackCore;
     ctx.fill();
     ctx.shadowBlur = 0;
   }
@@ -113,14 +114,14 @@ export function drawAttacks(ctx, attacks, scale) {
 export function drawParticles(ctx, particles) {
   for (const p of particles) {
     const size = 1 + p.life * 2;
-    ctx.fillStyle = `rgba(${p.color || '255, 100, 50'}, ${Math.max(0, p.life)})`;
+    ctx.fillStyle = `rgba(${p.color || RGB.ember}, ${Math.max(0, p.life)})`;
     ctx.fillRect(p.x - size / 2, p.y - size / 2, size, size);
   }
 }
 
 export function drawFlashes(ctx, flashes, scale) {
   for (const f of flashes) {
-    ctx.fillStyle = `rgba(255, 255, 255, ${f.life})`;
+    ctx.fillStyle = `rgba(${RGB.white}, ${f.life})`;
     ctx.beginPath();
     ctx.arc(f.x, f.y, 10 * scale * f.life, 0, Math.PI * 2);
     ctx.fill();
@@ -137,7 +138,7 @@ export function render(ctx, sim, gameState, width, height, reducedMotion, labels
     );
   }
 
-  ctx.fillStyle = 'rgba(5, 5, 10, 0.4)';
+  ctx.fillStyle = `rgba(${RGB.space}, 0.4)`;
   ctx.fillRect(-10, -10, width + 20, height + 20);
 
   const scale = getScale(width);

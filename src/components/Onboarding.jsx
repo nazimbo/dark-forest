@@ -87,7 +87,7 @@ const Onboarding = () => {
         <button
           ref={buttonRef}
           onClick={dismiss}
-          className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all transform hover:scale-105 shadow-[0_0_30px_rgba(37,99,235,0.3)] tracking-wider uppercase text-sm"
+          className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all transform hover:scale-105 shadow-glow-lg tracking-wider uppercase text-sm"
         >
           {t('ui.onboardingBegin')}
         </button>

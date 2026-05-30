@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+/* Design tokens — single source of truth for brand accents and glows.
+   In Tailwind v4 the --color-* and --shadow-* theme namespaces auto-generate
+   utilities (e.g. `text-brand`, `border-brand`, `shadow-glow`). The canvas
+   palette mirrors --color-brand in src/simulation/palette.js (a 2D context
+   cannot resolve CSS custom properties). */
+@theme {
+  --color-brand: #60a5fa;
+  --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.3);
+  --shadow-glow-lg: 0 0 30px rgba(37, 99, 235, 0.3);
+}
+
 /* Optional: Ensure full height for the app */
 body, html, #root {
   height: 100%;
@@ -10,7 +21,7 @@ body, html, #root {
 
 /* Keyboard focus indicators */
 :focus-visible {
-  outline: 2px solid #60A5FA;
+  outline: 2px solid var(--color-brand);
   outline-offset: 2px;
 }
 
@@ -31,15 +42,21 @@ body, html, #root {
   top: 0;
 }
 
+/* Responsive narrative-panel tweaks for non-standard viewports.
+   These conditions (height + orientation) aren't expressible as plain
+   min-width breakpoints, so they live here as a single source of truth.
+   They sit in unlayered CSS, which the cascade ranks above Tailwind's
+   layered utilities — so no !important specificity hacks are needed. */
+
 /* Landscape mobile — compact vertical spacing */
 @media (max-height: 500px) and (orientation: landscape) {
   .narrative-panel-gradient {
-    padding-top: 2rem !important;
-    padding-bottom: 0.75rem !important;
+    padding-top: 2rem;
+    padding-bottom: 0.75rem;
   }
   .narrative-text {
-    font-size: 0.875rem !important;
-    line-height: 1.4 !important;
+    font-size: 0.875rem;
+    line-height: 1.4;
   }
   .narrative-subtext {
     display: none;
@@ -49,11 +66,8 @@ body, html, #root {
   }
 }
 
-/* Portrait mobile — compact bottom panel */
+/* Portrait mobile — hide secondary copy on the compact bottom panel */
 @media (max-width: 639px) and (orientation: portrait) {
-  .narrative-panel-gradient {
-    padding-top: 3rem !important;
-  }
   .narrative-subtext {
     display: none;
   }
@@ -62,11 +76,11 @@ body, html, #root {
 /* Very small screens (<320px) */
 @media (max-width: 319px) {
   .game-header {
-    padding: 0.375rem !important;
-    font-size: 0.625rem !important;
+    padding: 0.375rem;
+    font-size: 0.625rem;
   }
   .game-header h1 {
-    font-size: 0.75rem !important;
+    font-size: 0.75rem;
   }
 }
 

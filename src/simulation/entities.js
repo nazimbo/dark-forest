@@ -1,4 +1,5 @@
 import { HUNTER_RATIO, STAR_DENSITY } from './constants';
+import { RGB, HEX } from './palette';
 
 const NEBULA_COLORS = [
   '59, 130, 246',
@@ -47,7 +48,7 @@ export function createUserStar(width, height) {
     x: width / 2,
     y: isPortraitMobile ? height * 0.38 : height / 2,
     size: 4,
-    color: '#60A5FA',
+    color: HEX.brand,
     alive: true,
   };
 }
@@ -61,7 +62,7 @@ export function createWave(x, y, options = {}) {
     maxRadius: options.maxRadius ?? null,
     isWhisper: options.isWhisper ?? false,
     isNpc: options.isNpc ?? false,
-    color: options.color ?? '96, 165, 250',
+    color: options.color ?? RGB.brand,
   };
 }
 

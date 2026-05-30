@@ -1,6 +1,7 @@
 import { STATES, WHISPER_MAX_RADIUS, msToFrames } from './constants';
 import { createWave, createAttack, createExplosionParticles, createFlash } from './entities';
 import { scheduleEvent } from './physics';
+import { RGB } from './palette';
 
 // --- Collision / Impact / Scheduled-event handlers ---
 
@@ -29,7 +30,7 @@ export function handleImpact(sim, impact, ctx) {
     if (!sim.npcBroadcaster?.alive) return;
     sim.shake.intensity = 10;
     sim.particles.push(
-      ...createExplosionParticles(sim.npcBroadcaster.x, sim.npcBroadcaster.y, 30, '52, 211, 153')
+      ...createExplosionParticles(sim.npcBroadcaster.x, sim.npcBroadcaster.y, 30, RGB.broadcaster)
     );
     sim.npcBroadcaster.alive = false;
     const star = sim.stars.find(s => s.x === sim.npcBroadcaster.x && s.y === sim.npcBroadcaster.y);
@@ -43,7 +44,7 @@ export function handleImpact(sim, impact, ctx) {
     sim.particles.push(
       ...createExplosionParticles(
         sim.userStar.x, sim.userStar.y, 60,
-        () => Math.random() > 0.5 ? '255, 100, 50' : '96, 165, 250'
+        () => Math.random() > 0.5 ? RGB.ember : RGB.brand
       )
     );
     sim.userStar.alive = false;
@@ -73,7 +74,7 @@ export function handleScheduledEvent(sim, event, ctx) {
       sim.npcBroadcaster = { x: npc.x, y: npc.y, size: npc.size, alive: true };
       sim.waves.push(createWave(npc.x, npc.y, {
         alpha: 0.8,
-        color: '52, 211, 153',
+        color: RGB.broadcaster,
         isNpc: true,
       }));
       ctx.sound?.playBroadcast?.();
