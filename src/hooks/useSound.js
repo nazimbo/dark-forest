@@ -52,6 +52,23 @@ export const useSound = () => {
     }
   }, []);
 
+  // Prime the audio graph on the first user gesture. Browsers start an
+  // AudioContext suspended until a gesture occurs, and resume() is async — so
+  // creating/resuming it eagerly here prevents the first action's sounds from
+  // being scheduled against a frozen clock and dropped.
+  useEffect(() => {
+    const unlock = () => getCtx();
+    const opts = { once: true, passive: true };
+    window.addEventListener('pointerdown', unlock, opts);
+    window.addEventListener('keydown', unlock, opts);
+    window.addEventListener('touchend', unlock, opts);
+    return () => {
+      window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('keydown', unlock);
+      window.removeEventListener('touchend', unlock);
+    };
+  }, [getCtx]);
+
   const startDrone = useCallback(() => {
     const ctx = getCtx();
     if (!ctx || droneRef.current) return;
