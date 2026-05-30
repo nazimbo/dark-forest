@@ -33,6 +33,8 @@ export const translations = {
       onboardingText: 'The universe is a dark forest. Every civilization is an armed hunter. You are a nascent civilization faced with a choice: broadcast your existence, whisper cautiously, or listen in silence.',
       onboardingHint: 'Choose wisely. Revealing your existence may be the last thing you ever do.',
       onboardingBegin: 'Enter the Forest',
+      you: 'YOU',
+      signal: 'SIGNAL',
     },
     narratives: {
       START: {
@@ -112,6 +114,8 @@ export const translations = {
       onboardingText: "L'univers est une forêt sombre. Chaque civilisation est un chasseur armé. Vous êtes une civilisation naissante face à un choix\u00a0: diffuser votre existence, murmurer prudemment, ou écouter en silence.",
       onboardingHint: 'Choisissez avec soin. Révéler votre existence pourrait être la dernière chose que vous fassiez.',
       onboardingBegin: 'Entrer dans la Forêt',
+      you: 'VOUS',
+      signal: 'SIGNAL',
     },
     narratives: {
       START: {
@@ -191,6 +195,8 @@ export const translations = {
       onboardingText: 'El universo es un bosque oscuro. Cada civilizaci\u00f3n es un cazador armado. Eres una civilizaci\u00f3n naciente ante una elecci\u00f3n: emitir tu existencia, susurrar con cautela o escuchar en silencio.',
       onboardingHint: 'Elige sabiamente. Revelar tu existencia podr\u00eda ser lo \u00faltimo que hagas.',
       onboardingBegin: 'Entrar al Bosque',
+      you: 'TÚ',
+      signal: 'SEÑAL',
     },
     narratives: {
       START: {
@@ -270,6 +276,8 @@ export const translations = {
       onboardingText: 'Das Universum ist ein dunkler Wald. Jede Zivilisation ist ein bewaffneter J\u00e4ger. Du bist eine junge Zivilisation vor einer Wahl: deine Existenz ausstrahlen, vorsichtig fl\u00fcstern oder in Stille lauschen.',
       onboardingHint: 'W\u00e4hle weise. Deine Existenz zu offenbaren k\u00f6nnte das Letzte sein, was du tust.',
       onboardingBegin: 'Den Wald betreten',
+      you: 'DU',
+      signal: 'SIGNAL',
     },
     narratives: {
       START: {
@@ -349,6 +357,8 @@ export const translations = {
       onboardingText: '\u5b87\u5b99\u662f\u4e00\u5ea7\u9ed1\u6697\u68ee\u6797\u3002\u6bcf\u4e2a\u6587\u660e\u90fd\u662f\u6b66\u88c5\u7684\u730e\u4eba\u3002\u4f60\u662f\u4e00\u4e2a\u521d\u751f\u7684\u6587\u660e\uff0c\u9762\u4e34\u62e9\uff1a\u5e7f\u64ad\u4f60\u7684\u5b58\u5728\u3001\u8c28\u614e\u4f4e\u8bed\u3001\u6216\u9759\u9ed8\u7ec6\u542c\u3002',
       onboardingHint: '\u8c28\u614e\u9009\u62e9\u3002\u66b4\u9732\u4f60\u7684\u5b58\u5728\u53ef\u80fd\u662f\u4f60\u505a\u7684\u6700\u540e\u4e00\u4ef6\u4e8b\u3002',
       onboardingBegin: '\u8fdb\u5165\u68ee\u6797',
+      you: '\u4f60',
+      signal: '\u4fe1\u53f7',
     },
     narratives: {
       START: {
@@ -428,6 +438,8 @@ export const translations = {
       onboardingText: '\u5b87\u5b99\u306f\u6697\u9ed2\u306e\u68ee\u6797\u3002\u3059\u3079\u3066\u306e\u6587\u660e\u306f\u6b66\u88c5\u3057\u305f\u72e9\u4eba\u3002\u3042\u306a\u305f\u306f\u751f\u307e\u308c\u305f\u3070\u304b\u308a\u306e\u6587\u660e\u3001\u9078\u629e\u3092\u8feb\u3089\u308c\u3066\u3044\u308b\uff1a\u5b58\u5728\u3092\u653e\u9001\u3059\u308b\u304b\u3001\u614e\u91cd\u306b\u3055\u3055\u3084\u304f\u304b\u3001\u6c88\u9ed9\u306e\u4e2d\u3067\u8033\u3092\u6f84\u307e\u3059\u304b\u3002',
       onboardingHint: '\u8ce2\u304f\u9078\u3079\u3002\u5b58\u5728\u3092\u660e\u304b\u3059\u3053\u3068\u304c\u3001\u3042\u306a\u305f\u306e\u6700\u5f8c\u306e\u884c\u3044\u306b\u306a\u308b\u304b\u3082\u3057\u308c\u306a\u3044\u3002',
       onboardingBegin: '\u68ee\u6797\u306b\u5165\u308b',
+      you: '\u3042\u306a\u305f',
+      signal: '\u4fe1\u53f7',
     },
     narratives: {
       START: {
@@ -507,6 +519,8 @@ export const translations = {
       onboardingText: 'O universo \u00e9 uma floresta escura. Cada civiliza\u00e7\u00e3o \u00e9 um ca\u00e7ador armado. Voc\u00ea \u00e9 uma civiliza\u00e7\u00e3o nascente diante de uma escolha: transmitir sua exist\u00eancia, sussurrar com cautela ou escutar em sil\u00eancio.',
       onboardingHint: 'Escolha sabiamente. Revelar sua exist\u00eancia pode ser a \u00faltima coisa que voc\u00ea far\u00e1.',
       onboardingBegin: 'Entrar na Floresta',
+      you: 'VOCÊ',
+      signal: 'SINAL',
     },
     narratives: {
       START: {
@@ -586,6 +600,8 @@ export const translations = {
       onboardingText: '\u0627\u0644\u0643\u0648\u0646 \u063a\u0627\u0628\u0629 \u0645\u0638\u0644\u0645\u0629. \u0643\u0644 \u062d\u0636\u0627\u0631\u0629 \u0635\u064a\u0627\u062f \u0645\u0633\u0644\u062d. \u0623\u0646\u062a \u062d\u0636\u0627\u0631\u0629 \u0648\u0644\u064a\u062f\u0629 \u0623\u0645\u0627\u0645 \u062e\u064a\u0627\u0631: \u0628\u062b \u0648\u062c\u0648\u062f\u0643\u060c \u0623\u0648 \u0627\u0644\u0647\u0645\u0633 \u0628\u062d\u0630\u0631\u060c \u0623\u0648 \u0627\u0644\u0625\u0635\u063a\u0627\u0621 \u0641\u064a \u0635\u0645\u062a.',
       onboardingHint: '\u0627\u062e\u062a\u0631 \u0628\u062d\u0643\u0645\u0629. \u0643\u0634\u0641 \u0648\u062c\u0648\u062f\u0643 \u0642\u062f \u064a\u0643\u0648\u0646 \u0622\u062e\u0631 \u0645\u0627 \u062a\u0641\u0639\u0644\u0647.',
       onboardingBegin: '\u0627\u062f\u062e\u0644 \u0627\u0644\u063a\u0627\u0628\u0629',
+      you: '\u0623\u0646\u062a',
+      signal: '\u0625\u0634\u0627\u0631\u0629',
     },
     narratives: {
       START: {
@@ -665,6 +681,8 @@ export const translations = {
       onboardingText: '\u05d4\u05d9\u05e7\u05d5\u05dd \u05d4\u05d5\u05d0 \u05d9\u05e2\u05e8 \u05d0\u05e4\u05dc. \u05db\u05dc \u05e6\u05d9\u05d5\u05d5\u05d9\u05dc\u05d9\u05d6\u05e6\u05d9\u05d4 \u05d4\u05d9\u05d0 \u05e6\u05d9\u05d9\u05d3 \u05d7\u05de\u05d5\u05e9. \u05d0\u05ea/\u05d4 \u05e6\u05d9\u05d5\u05d5\u05d9\u05dc\u05d9\u05d6\u05e6\u05d9\u05d4 \u05e6\u05e2\u05d9\u05e8\u05d4 \u05d4\u05e2\u05d5\u05de\u05d3\u05ea \u05d1\u05e4\u05e0\u05d9 \u05d1\u05d7\u05d9\u05e8\u05d4: \u05dc\u05e9\u05d3\u05e8 \u05d0\u05ea \u05e7\u05d9\u05d5\u05de\u05da, \u05dc\u05dc\u05d7\u05d5\u05e9 \u05d1\u05d6\u05d4\u05d9\u05e8\u05d5\u05ea, \u05d0\u05d5 \u05dc\u05d4\u05e7\u05e9\u05d9\u05d1 \u05d1\u05d3\u05de\u05de\u05d4.',
       onboardingHint: '\u05d1\u05d7\u05e8/\u05d9 \u05d1\u05d7\u05d5\u05db\u05de\u05d4. \u05dc\u05d7\u05e9\u05d5\u05e3 \u05d0\u05ea \u05e7\u05d9\u05d5\u05de\u05da \u05e2\u05dc\u05d5\u05dc \u05dc\u05d4\u05d9\u05d5\u05ea \u05d4\u05d3\u05d1\u05e8 \u05d4\u05d0\u05d7\u05e8\u05d5\u05df \u05e9\u05ea\u05e2\u05e9\u05d4/\u05d9.',
       onboardingBegin: '\u05d4\u05d9\u05db\u05e0\u05e1 \u05dc\u05d9\u05e2\u05e8',
+      you: '\u05d0\u05ea\u05d4',
+      signal: '\u05d0\u05d5\u05ea',
     },
     narratives: {
       START: {

@@ -37,7 +37,7 @@ export function drawStars(ctx, stars, gameState) {
   }
 }
 
-export function drawNpcBroadcaster(ctx, npc, scale) {
+export function drawNpcBroadcaster(ctx, npc, scale, label = 'SIGNAL') {
   if (!npc?.alive) return;
   const pulseSize = npc.size + 1 + Math.sin(Date.now() / 200) * 0.8;
   ctx.shadowBlur = 10 * scale;
@@ -51,10 +51,10 @@ export function drawNpcBroadcaster(ctx, npc, scale) {
   ctx.fillStyle = '#6EE7B7';
   ctx.font = `${Math.round(11 * scale)}px monospace`;
   ctx.textAlign = 'center';
-  ctx.fillText('SIGNAL', npc.x, npc.y + 15 * scale);
+  ctx.fillText(label, npc.x, npc.y + 15 * scale);
 }
 
-export function drawUserStar(ctx, userStar, gameState, scale) {
+export function drawUserStar(ctx, userStar, gameState, scale, label = 'YOU') {
   if (!userStar?.alive) return;
   const pulseSize = userStar.size + Math.sin(Date.now() / 200);
 
@@ -70,7 +70,7 @@ export function drawUserStar(ctx, userStar, gameState, scale) {
     ctx.fillStyle = '#93C5FD';
     ctx.font = `${Math.round(11 * scale)}px monospace`;
     ctx.textAlign = 'center';
-    ctx.fillText('YOU', userStar.x, userStar.y + 15 * scale);
+    ctx.fillText(label, userStar.x, userStar.y + 15 * scale);
   }
 }
 
@@ -127,7 +127,7 @@ export function drawFlashes(ctx, flashes, scale) {
   }
 }
 
-export function render(ctx, sim, gameState, width, height, reducedMotion) {
+export function render(ctx, sim, gameState, width, height, reducedMotion, labels = {}) {
   ctx.save();
 
   if (!reducedMotion && sim.shake.intensity > 0) {
@@ -144,8 +144,8 @@ export function render(ctx, sim, gameState, width, height, reducedMotion) {
 
   drawNebulae(ctx, sim.nebulae);
   drawStars(ctx, sim.stars, gameState);
-  drawNpcBroadcaster(ctx, sim.npcBroadcaster, scale);
-  drawUserStar(ctx, sim.userStar, gameState, scale);
+  drawNpcBroadcaster(ctx, sim.npcBroadcaster, scale, labels.signal);
+  drawUserStar(ctx, sim.userStar, gameState, scale, labels.you);
   drawWaves(ctx, sim.waves, scale);
   drawAttacks(ctx, sim.attacks, scale);
   drawFlashes(ctx, sim.flashes, scale);

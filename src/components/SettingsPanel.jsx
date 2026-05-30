@@ -57,6 +57,7 @@ const SettingsPanel = ({ isMuted, onToggleMute }) => {
       <button
         onClick={() => setIsOpen(o => !o)}
         aria-label={t('ui.ariaSettings')}
+        aria-haspopup="true"
         aria-expanded={isOpen}
         className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-gray-400 hover:text-gray-200"
       >
@@ -65,20 +66,19 @@ const SettingsPanel = ({ isMuted, onToggleMute }) => {
 
       {isOpen && (
         <div
-          role="menu"
+          aria-label={t('ui.ariaSettings')}
           className="absolute end-0 top-full mt-2 bg-black/95 border border-white/15 rounded-xl p-2 min-w-[180px] backdrop-blur-sm shadow-xl shadow-black/50 animate-in"
         >
           {/* Language */}
-          <div className="px-3 py-2">
-            <span className="text-[10px] uppercase tracking-widest text-gray-500">{t('ui.language')}</span>
+          <div role="group" aria-labelledby="settings-lang-label" className="px-3 py-2">
+            <span id="settings-lang-label" className="text-[10px] uppercase tracking-widest text-gray-400">{t('ui.language')}</span>
             <div className="grid grid-cols-3 gap-1 mt-1.5">
               {LANG_CODES.map(code => (
                 <button
                   key={code}
-                  role="menuitemradio"
-                  aria-checked={lang === code}
+                  aria-pressed={lang === code}
                   onClick={() => setLang(code)}
-                  className={`px-2 py-1.5 text-xs rounded-md transition-colors ${lang === code ? 'bg-white/15 text-gray-200' : 'text-gray-500 hover:text-gray-300 hover:bg-white/5'}`}
+                  className={`px-2 py-1.5 text-xs rounded-md transition-colors ${lang === code ? 'bg-white/15 text-gray-200' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'}`}
                 >
                   {LANG_LABELS[code] ?? code.toUpperCase()}
                 </button>
@@ -90,12 +90,11 @@ const SettingsPanel = ({ isMuted, onToggleMute }) => {
 
           {/* Sound */}
           <button
-            role="menuitem"
             onClick={onToggleMute}
             className="w-full flex items-center gap-3 px-3 py-2.5 text-xs text-gray-300 hover:bg-white/5 rounded-md transition-colors"
           >
             {isMuted
-              ? <VolumeX aria-hidden="true" className="w-3.5 h-3.5 text-gray-500" />
+              ? <VolumeX aria-hidden="true" className="w-3.5 h-3.5 text-gray-400" />
               : <Volume2 aria-hidden="true" className="w-3.5 h-3.5 text-gray-400" />
             }
             <span>{isMuted ? t('ui.unmute') : t('ui.mute')}</span>
@@ -103,7 +102,6 @@ const SettingsPanel = ({ isMuted, onToggleMute }) => {
 
           {/* Fullscreen */}
           <button
-            role="menuitem"
             onClick={toggleFullscreen}
             className="w-full flex items-center gap-3 px-3 py-2.5 text-xs text-gray-300 hover:bg-white/5 rounded-md transition-colors"
           >

@@ -6,11 +6,16 @@ import { render } from '../simulation/renderer';
 import { handleCollision, handleImpact, handleScheduledEvent, clearEffects, doBroadcast, doWhisper, doListen } from '../simulation/rules';
 import { useGameState } from './useGameState';
 
-export const useSimulation = (sound) => {
+export const useSimulation = (sound, labels) => {
   const canvasRef = useRef(null);
   const dimensionsRef = useRef({ width: 0, height: 0 });
   const [initKey, setInitKey] = useState(0);
   const [civCount, setCivCount] = useState(0);
+
+  // Localized canvas labels (e.g. "YOU"/"SIGNAL") — read via ref so the
+  // animation loop always sees the current language without re-initializing.
+  const labelsRef = useRef(labels);
+  useEffect(() => { labelsRef.current = labels; }, [labels]);
 
   // Track prefers-reduced-motion for accessible rendering
   const reducedMotionRef = useRef(false);
@@ -121,7 +126,7 @@ export const useSimulation = (sound) => {
       }
 
       const { width: curW, height: curH } = dimensionsRef.current;
-      render(ctx, sim, currentState, curW, curH, reducedMotionRef.current);
+      render(ctx, sim, currentState, curW, curH, reducedMotionRef.current, labelsRef.current);
 
       sim.animationId = requestAnimationFrame(loop);
     };

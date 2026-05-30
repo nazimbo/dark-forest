@@ -54,10 +54,15 @@ export const useTranslation = () => {
   const t = useCallback(
     (key, { count } = {}) => {
       const keys = key.split('.');
-      let val = translations[lang];
-      for (const k of keys) {
-        val = val?.[k];
-      }
+      const resolve = (root) => {
+        let val = root;
+        for (const k of keys) val = val?.[k];
+        return val;
+      };
+      // Fall back to English when a key is missing in the active language,
+      // so partial translations degrade to readable text instead of raw keys.
+      let val = resolve(translations[lang]);
+      if (val === undefined && lang !== 'en') val = resolve(translations.en);
       if (val && typeof val === 'object') {
         const rule = count !== undefined ? new Intl.PluralRules(lang).select(count) : 'other';
         return val[rule] ?? val.other ?? key;
