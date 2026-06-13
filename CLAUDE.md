@@ -77,7 +77,7 @@ Every state value is mirrored into **both** React state and a ref (`gameState`/`
 
 ### i18n (`src/i18n/`)
 
-`LanguageContext.jsx` provides the language and a `t()` helper; `translations.js` holds all strings and narrative for 9 languages (EN, FR, ES, DE, ZH, JA, PT, AR, HE) with RTL and pluralization. The `<html lang>` and `dir` attributes are set dynamically. To **add a language**: copy the `en` entry in `translations.js` (every key must be present) and optionally add a label to `LANG_LABELS` in `components/SettingsPanel.jsx`.
+`LanguageContext.jsx` provides the language and a `t()` helper; `translations.js` holds all strings and narrative for 10 languages (EN, FR, ES, DE, ZH, JA, PT, AR, FA, HE) with RTL (AR, FA, HE) and pluralization (via `Intl.PluralRules`). The `<html lang>` and `dir` attributes are set dynamically. To **add a language**: copy the `en` entry in `translations.js` (every key must be present) and optionally add a label to `LANG_LABELS` in `components/SettingsPanel.jsx`.
 
 ## Conventions
 
